@@ -1,5 +1,19 @@
 <?php
 	namespace FatZebra;
+	/**
+	* Fat Zebra PHP Gateway Library
+	* 
+	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
+	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
+	*
+	* The original source for this library, including its tests can be found at
+	* https://github.com/fatzebra/PHP-Library
+	*
+	* Please visit http://docs.fatzebra.com.au for details on the Fat Zebra API
+	* or https://www.fatzebra.com.au/help for support.
+	*
+	* Patches, pull requests, issues, comments and suggestions always welcome.
+	*/
 	
 	class Gateway {
 		public $url = "https://gateway.fatzebra.com.au";
@@ -24,7 +38,7 @@
 			$customer_ip = $_SERVER['REMOTE_ADDR'];
 			if (is_null($costomer_ip)) $customer_ip = "127.0.0.1";
 
-			$payload = array_merge($request->to_array(), array("customer_ip" => $customer_ip));
+			$payload = array_merge($request->	to_array(), array("customer_ip" => $customer_ip));
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
