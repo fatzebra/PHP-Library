@@ -22,10 +22,10 @@
 		public $test_mode = true; // This needs to be set to false for production use.
 
 		public function __construct($username, $token, $test_mode = true, $gateway_url = null) {
-			if (is_null($username) || strlen($username) === 0) throw new InvalidArgumentException("Username is required");
+			if (is_null($username) || strlen($username) === 0) throw new \InvalidArgumentException("Username is required");
 			$this->username = $username;
 			
-			if (is_null($token) || strlen($token) === 0) throw new InvalidArgumentException("Token is required");
+			if (is_null($token) || strlen($token) === 0) throw new \InvalidArgumentException("Token is required");
 			$this->token = $token;
 
 			$this->test_mode = $test_mode;
@@ -36,14 +36,14 @@
 
 		public function purchase($request) {
 			$customer_ip = $_SERVER['REMOTE_ADDR'];
-			if (is_null($costomer_ip)) $customer_ip = "127.0.0.1";
+			if (is_null($customer_ip)) $customer_ip = "127.0.0.1";
 
 			$payload = array_merge($request->	to_array(), array("customer_ip" => $customer_ip));
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
 		public function get_purchase($reference) {
-			if (is_null($reference) || strlen($reference) === 0) throw new InvalidArgumentException("Reference is required");
+			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/purchases/" . $reference);
 		}
 
@@ -62,7 +62,7 @@
 			$data = curl_exec($curl); 
 			
 			if (curl_errno($curl) !== 0) {
-				throw new Exception("cURL error: " . curl_error($curl));
+				throw new \Exception("cURL error: " . curl_error($curl));
 			}
 			curl_close($curl);
 
@@ -70,11 +70,11 @@
 			if (is_null($response)) {
 				$err = json_last_error();
 				if ($err == JSON_ERROR_SYNTAX) {
-					throw new Exception("JSON Syntax error. JSON attempted to parse: " . $data);
+					throw new \Exception("JSON Syntax error. JSON attempted to parse: " . $data);
 				} elseif ($err == JSON_ERROR_UTF8) {
-					throw new Exception("JSON Data invalid - Malformed UTF-8 characters. Data: " . $data);
+					throw new \Exception("JSON Data invalid - Malformed UTF-8 characters. Data: " . $data);
 				} else {
-					throw new Exception("JSON parse failed. Unknown error. Data:" . $data);
+					throw new \Exception("JSON parse failed. Unknown error. Data:" . $data);
 				}
 			}
 
