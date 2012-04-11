@@ -36,8 +36,11 @@
 		}
 
 		public function purchase($request) {
-			$customer_ip = $_SERVER['REMOTE_ADDR'];
-			if (is_null($customer_ip)) $customer_ip = "127.0.0.1";
+			if (isset($_SERVER['REMOTE_ADDR'])) {
+				$customer_ip = $_SERVER['REMOTE_ADDR'];
+			} else {
+				$customer_ip = "127.0.0.1";
+			}
 
 			$payload = array_merge($request->	to_array(), array("customer_ip" => $customer_ip));
 			return $this->do_request("POST", "/purchases", $payload);
