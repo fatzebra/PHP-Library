@@ -6,7 +6,7 @@
 		}
 
 		public function test_valid_transaction() {
-			$gw = new FatZebra\Gateway("TESTbiztech", "16a31852daf418050eaf628f4fffecfccbf9571c", true);
+			$gw = new FatZebra\Gateway("TEST", "TEST", true, "https://gateway.sandbox.fatzebra.com.au");
 
 			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($req);

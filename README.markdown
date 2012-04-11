@@ -1,23 +1,61 @@
 PHP API Library for Fat Zebra
-=============================
+==============================
 
-Further (better) readme content coming soon - I promise!
+Release 1.0.0 for API version 1.0
 
-General Usage:
+A PHP library for the [Fat Zebra](https://www.fatzebra.com.au) Online Payment Gateway (for Australian Merchants)
 
- 1. Include the FatZebra.class.php file into your sources.
- 2. Create a new Gateway object, and pass it your username, token, and true or false for using test mode.
- 3. Create a purchase request.
- 4. Call the purchase() method on the gateway object.
- 5. Examine the result.
+Dependencies
+------------
 
-More details to follow (structure of request/response objects etc).
+ * PHP (Tested on version 5.3)
+ * cURL
 
-**Note:** The cacert.pem file needs to be placed in the same location as the FatZebra.class.php file to ensure certificate verification.
-The calls to the gateway will fail without this.
+ [![Build Status](https://secure.travis-ci.org/fatzebra/PHP-Library.png?branch=master)](http://travis-ci.org/fatzebra/PHP-Library)
 
-Documentation for the Fat Zebra API can be found at http://docs.fatzebra.com.au
+Installing
+----------
 
-As always, patches, pull requests, comments, issues etc welcome.
+Copy the files FatZebra.class.php and cacert.pem to your project lib folder (or similar)
 
-For support please visit https://www.fatzebra.com.au/help or email support@fatzebra.com.au
+**Note:** The cacert.pem file needs to be placed in the same location as the FatZebra.class.php file to ensure certificate verification. The calls to the gateway will fail without this.
+
+Usage
+-----
+
+```php
+<?php
+  session_start();
+  include_once("../FatZebra.class.php");
+  define("USERNAME", "havanaco");
+  define("TOKEN", "673bb3aaca9a1961bfa3c61917594dc7c4a00b71");
+  define("TEST_MODE", true);
+
+  try {
+  	$gateway = new FatZebra\Gateway(USERNAME, TOKEN, TEST_MODE);
+  	$purchase_request = new FatZebra\PurchaseRequest($_POST['amount'], $_POST['reference'], $_POST['name'], $_POST['card_number'], $_POST['card_expiry_month'] ."/". $_POST['card_expiry_month'], $_POST['card_cvv']);
+
+  	$response = $gateway->purchase($purchase_request);
+
+  	$_SESSION['response'] = $response;
+  	header("Location: index.php");
+	} catch(Exception $ex) {
+		print "Error: " . $ex->getMessage();
+	}
+?>
+```
+
+See the example folder for this example tied into a website.
+
+Documentation
+-------------
+
+Full API reference can be found at http://docs.fatzebra.com.au
+
+Support
+-------
+If you have any issue with the Fat Zebra PHP Client please contact us at support@fatzebra.com.au and we will be more then happy to help out. Alternatively you may raise an issue in github.
+
+Pull Requests
+-------------
+If you would like to contribute to the plugin please fork the project, make your changes within a feature branch and then submit a pull request. All pull requests will be reviewed as soon as possible and integrated into the main branch if deemed suitable.

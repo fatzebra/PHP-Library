@@ -17,6 +17,7 @@
 	
 	class Gateway {
 		public $url = "https://gateway.fatzebra.com.au";
+		public $api_version = "1.0";
 		public $username;
 		public $token;
 		public $test_mode = true; // This needs to be set to false for production use.
@@ -49,7 +50,12 @@
 
 		private function do_request($method, $uri, $payload) {
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $this->url . $uri);
+			if(is_null($this->version)) {
+				curl_setopt($curl, CURLOPT_URL, $this->url . $uri);
+			} else {
+				curl_setopt($curl, CURLOPT_URL, $this->url . "/v" . $this->version . $uri);	
+			}
+			
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $this->username .":". $this->token);
