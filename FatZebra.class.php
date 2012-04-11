@@ -53,10 +53,10 @@
 
 		private function do_request($method, $uri, $payload) {
 			$curl = curl_init();
-			if(is_null($this->version)) {
+			if(is_null($this->api_version)) {
 				curl_setopt($curl, CURLOPT_URL, $this->url . $uri);
 			} else {
-				curl_setopt($curl, CURLOPT_URL, $this->url . "/v" . $this->version . $uri);	
+				curl_setopt($curl, CURLOPT_URL, $this->url . "/v" . $this->api_version . $uri);	
 			}
 			
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
