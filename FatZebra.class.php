@@ -46,6 +46,23 @@
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
+		public function token_purchase($token, $amount, $reference, $cvv = null) {
+			if (isset($_SERVER['REMOTE_ADDR'])) {
+				$customer_ip = $_SERVER['REMOTE_ADDR'];
+			} else {
+				$customer_ip = "127.0.0.1";
+			}
+
+			$payload = array(
+				"customer_ip" => $customer_ip,
+				"card_token" => $token,
+				"cvv" => $cvv,
+				"amount" => intval(round($amount * 100)),
+				"reference" => $reference
+				);
+			return $this->do_request("POST", "/purchases", $payload);
+		}
+
 		public function refund($transaction_id, $amount, $reference) {
 			if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
 			if(is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
@@ -61,11 +78,34 @@
 			return $this->do_request("POST", "/refunds", $payload);
 
 		}
-		// TODO: refunds, captures, recurring
+		// TODO: captures, recurring
 
 		public function get_purchase($reference) {
 			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/purchases/" . $reference);
+		}
+
+		public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
+			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");			
+			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
+			if(is_null($expiry_date)) throw new \InvalidArgumentException("Expiry is a required field.");	
+			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
+
+
+			if (isset($_SERVER['REMOTE_ADDR'])) {
+				$customer_ip = $_SERVER['REMOTE_ADDR'];
+			} else {
+				$customer_ip = "127.0.0.1";
+			}
+
+			$payload = array(
+				"customer_ip" => $customer_ip,
+				"card_holder" => $card_holder,
+				"card_number" => $card_number,
+				"card_expiry" => $expiry_date,
+				"cvv" => $cvv
+				);
+			return $this->do_request("POST", "/credit_cards", $payload);
 		}
 
 		private function do_request($method, $uri, $payload = null) {
