@@ -1,7 +1,7 @@
 <?php
 	include "FatZebra.class.php";
-	// define("GW_URL", "https://gateway.sandbox.fatzebra.com.au");
-	define("GW_URL", "http://fatapi.dev");
+	define("GW_URL", "https://gateway.sandbox.fatzebra.com.au");
+	
 	class GatewayTest extends PHPUnit_Framework_TestCase {
 		public function testIsTrue() {
 			$this->assertTrue(true);
