@@ -5,6 +5,9 @@
 	* 
 	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
+	* Updated 19 April 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
+	*  - Added refund support
+	*  - Added tokenization support
 	*
 	* The original source for this library, including its tests can be found at
 	* https://github.com/fatzebra/PHP-Library
@@ -78,11 +81,15 @@
 			return $this->do_request("POST", "/refunds", $payload);
 
 		}
-		// TODO: captures, recurring
 
 		public function get_purchase($reference) {
 			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/purchases/" . $reference);
+		}
+
+		public function get_refund($reference) {
+			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
+			return $this->do_request("GET", "/refunds/" . $reference);
 		}
 
 		public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
@@ -107,6 +114,11 @@
 				);
 			return $this->do_request("POST", "/credit_cards", $payload);
 		}
+
+		// TODO: captures, recurring
+
+
+		/************** Private functions ***************/
 
 		private function do_request($method, $uri, $payload = null) {
 			$curl = curl_init();

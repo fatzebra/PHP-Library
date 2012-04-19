@@ -80,6 +80,19 @@
 			$this->assertEquals($result->errors[0], "Original transaction is required");
 		}
 
+		public function test_fetch_refund() {
+			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+
+			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+			$result = $gw->purchase($purch_request);
+
+			$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
+			$fetch_result = $gw->get_refund($refund_result->response->id);
+			
+			$this->assertTrue($fetch_result->successful);
+			$this->assertTrue($fetch_result->response->successful);
+		}
+
 		public function test_tokenization() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 			$result = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", "123");
