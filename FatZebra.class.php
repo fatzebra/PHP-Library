@@ -46,6 +46,23 @@
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
+		public function refund($transaction_id, $amount, $reference) {
+			if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
+			if(is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
+			if(intval($amount) < 1) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
+			if(is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
+
+			$payload = array(
+				"transaction_id" => $transaction_id,
+				"amount" => intval(round($amount * 100)),
+				"reference" => $reference
+				);
+
+			return $this->do_request("POST", "/refunds", $payload);
+
+		}
+		// TODO: refunds, captures, recurring
+
 		public function get_purchase($reference) {
 			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/purchases/" . $reference);
@@ -58,6 +75,8 @@
 			} else {
 				curl_setopt($curl, CURLOPT_URL, $this->url . "/v" . $this->api_version . $uri);	
 			}
+
+			$payload["test"] = $this->test_mode;
 			
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -89,8 +108,6 @@
 
 			return $response;
 		}
-
-		// TODO: refunds, captures, recurring
 	}
 
 
