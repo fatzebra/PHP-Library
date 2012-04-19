@@ -1,5 +1,4 @@
 <?php
-	namespace FatZebra;
 	/**
 	* Fat Zebra PHP Gateway Library
 	* 
@@ -16,15 +15,48 @@
 	* or https://www.fatzebra.com.au/help for support.
 	*
 	* Patches, pull requests, issues, comments and suggestions always welcome.
+	*
+	* @package FatZebra
 	*/
+	namespace FatZebra;
 	
+	/**
+	* The Fat Zebra Gateway class for interfacing with Fat Zebra
+	*/
 	class Gateway {
+		/**
+		* The URL of the Fat Zebra gateway
+		*/
 		public $url = "https://gateway.fatzebra.com.au";
+		
+		/**
+		* The API version for the requests
+		*/
 		public $api_version = "1.0";
+		
+		/**
+		* The gateway username
+		*/
 		public $username;
+		
+		/**
+		* The gateway token
+		*/
 		public $token;
+		
+		/**
+		* Indicates if test mode should be used or not
+		*/
 		public $test_mode = true; // This needs to be set to false for production use.
 
+		/**
+		* Creates a new instance of the Fat Zebra gateway object
+		* @param string $username the username for the gateway
+		* @param string $token the token for the gateway
+		* @param boolean $test_mode indicates if the test mode should be used or not
+		* @param string $gateway_url the URL for the Fat Zebra gateway
+		* @return Gateway
+		*/
 		public function __construct($username, $token, $test_mode = true, $gateway_url = null) {
 			if (is_null($username) || strlen($username) === 0) throw new \InvalidArgumentException("Username is required");
 			$this->username = $username;
@@ -38,6 +70,11 @@
 			}
 		}
 
+		/**
+		* Performs a purchase against the FatZebra gateway
+		* @param PurchaseRequest $request the purchase request with the purchase details
+		* @return \StdObject
+		*/
 		public function purchase($request) {
 			if (isset($_SERVER['REMOTE_ADDR'])) {
 				$customer_ip = $_SERVER['REMOTE_ADDR'];
@@ -49,6 +86,14 @@
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
+		/**
+		* Performs a purchase against the FatZebra gateway with a tokenized credit card
+		* @param string $token the card token
+		* @param float $amount the purchase amount
+		* @param string $reference the purchase reference
+		* @param string $cvv the card verification value - optional but recommended
+		* @return \StdObject
+		*/
 		public function token_purchase($token, $amount, $reference, $cvv = null) {
 			if (isset($_SERVER['REMOTE_ADDR'])) {
 				$customer_ip = $_SERVER['REMOTE_ADDR'];
@@ -66,6 +111,13 @@
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
+		/**
+		* Performs a refund against the FatZebra gateway
+		* @param string $transaction_id the original transaction ID to be refunded
+		* @param float $amount the amount to be refunded
+		* @param string $reference the refund reference
+		* @return \StdObject
+		*/
 		public function refund($transaction_id, $amount, $reference) {
 			if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
 			if(is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
@@ -82,16 +134,34 @@
 
 		}
 
+		/**
+		* Retrieves a purchase from the FatZebra gateway
+		* @param string $reference the purchase ID
+		* @return \StdObject
+		*/
 		public function get_purchase($reference) {
 			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/purchases/" . $reference);
 		}
 
+		/**
+		* Retrieves a refund from the FatZebra gateway
+		* @param string $reference the refund ID
+		* @return \StdObject
+		*/
 		public function get_refund($reference) {
 			if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 			return $this->do_request("GET", "/refunds/" . $reference);
 		}
 
+		/**
+		* Created a new tokenized credit card
+		* @param string $card_holder the card holders name
+		* @param string $card_number the card number
+		* @param string $expiry_date the card expiry date (mm/yyyy format)
+		* @param string $cvv the card verification value
+		* @return \StdObject
+		*/
 		public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
 			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");			
 			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
@@ -120,6 +190,13 @@
 
 		/************** Private functions ***************/
 
+		/**
+		* Performs the request against the Fat Zebra gateway
+		* @param string $method the request method ("POST" or "GET")
+		* @param string $uri the request URI (e.g. /purchases, /credit_cards etc)
+		* @param Array $payload the request payload (if a POST request)
+		* @return \StdObject
+		*/
 		private function do_request($method, $uri, $payload = null) {
 			$curl = curl_init();
 			if(is_null($this->api_version)) {
@@ -167,14 +244,50 @@
 	}
 
 
+	/**
+	* The Fat Zebra Purchase Request
+	*/
 	class PurchaseRequest {
+		/**
+		* The purchase amount
+		*/
 		private $amount = 0.00;
+		
+		/**
+		* The purchase reference
+		*/
 		private $reference = "";
+		
+		/**
+		* The card holders name
+		*/
 		private $card_holder = "";
+		
+		/**
+		* The card number
+		*/
 		private $card_number = "";
+		
+		/**
+		* The card expiry date
+		*/
 		private $expiry = "";
+		
+		/**
+		* The Card Verification Value
+		*/
 		private $cvv = "";
 
+		/**
+		* Creates a new instance of the PurchaseRequest
+		* @param float $amount the purchase amount
+		* @param string $reference the reference for the purchase
+		* @param string $card_holder the card holders name
+		* @param string $card_number the card number
+		* @param string $expiry the card expiry (mm/yyyy format)
+		* @param string $cvv the card verification value
+		* @return PurchaseRequest
+		*/
 		public function __construct($amount, $reference, $card_holder, $card_number, $expiry, $cvv) {
 			if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
 			if((float)$amount < 0) throw new \InvalidArgumentException("Amount is invalid.");
@@ -197,6 +310,10 @@
 			$this->cvv = $cvv;
 		}		
 
+		/**
+		* Returns the request as a hash/assoc. array
+		* @return \Array
+		*/
 		public function to_array() {
 			$amount_as_int = (int)($this->amount * 100);
 			return array("card_holder" => $this->card_holder,
