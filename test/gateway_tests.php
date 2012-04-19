@@ -17,6 +17,7 @@
 		*/
 		public function test_valid_transaction() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($req);
@@ -31,6 +32,7 @@
 		*/
 		public function test_failing_transaction() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$req = new FatZebra\PurchaseRequest(100.99, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($req);
@@ -45,6 +47,7 @@
 		*/
 		public function test_failing_transaction_invalid_card() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012345", "05/2013", 123);
 			$result = $gw->purchase($req);
@@ -59,6 +62,7 @@
 		*/
 		public function test_fetch_valid_transaction() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($req);
@@ -74,6 +78,7 @@
 		*/
 		public function test_fetch_invalid_transaction() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$purch = $gw->get_purchase("12345");
 			$this->assertFalse($purch->successful);
@@ -85,6 +90,7 @@
 		*/
 		public function test_refund() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($purch_request);
@@ -100,7 +106,9 @@
 		*/
 		public function test_invalid_refund() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
-			$result = $gw->refund("12345", 100.00, "ERRORTEST");
+      $gw->timeout = 30;
+      
+      $result = $gw->refund("12345", 100.00, "ERRORTEST");
 
 			$this->assertFalse($result->successful);
 			$this->assertEquals($result->errors[0], "Original transaction is required");
@@ -111,6 +119,7 @@
 		*/
 		public function test_fetch_refund() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
 			$result = $gw->purchase($purch_request);
@@ -127,6 +136,8 @@
 		*/
 		public function test_tokenization() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
+
 			$result = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", "123");
 
 			$this->assertTrue($result->successful);
@@ -139,6 +150,8 @@
 		*/
 		public function test_failing_tokenization() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
+
 			$result = $gw->tokenize("Billy Blanks", "5123456789012345", "05/2013", "123");
 
 			$this->assertFalse($result->successful);
@@ -150,6 +163,8 @@
 		*/
 		public function test_purchase_with_token() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
+
 			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", "123");
 
 			$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand(), 123);
@@ -164,6 +179,8 @@
 		*/
 		public function test_purchase_with_token_no_cvv() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
+
 			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", 123);
 
 			$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand());
@@ -178,6 +195,7 @@
 		*/
 		public function test_purchase_with_invalid_token() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+      $gw->timeout = 30;
 
 			$result = $gw->token_purchase("TOK123", 100.00, "UNITTEST" . rand());
 
