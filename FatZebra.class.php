@@ -68,7 +68,7 @@
 			return $this->do_request("GET", "/purchases/" . $reference);
 		}
 
-		private function do_request($method, $uri, $payload) {
+		private function do_request($method, $uri, $payload = null) {
 			$curl = curl_init();
 			if(is_null($this->api_version)) {
 				curl_setopt($curl, CURLOPT_URL, $this->url . $uri);
@@ -81,8 +81,12 @@
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $this->username .":". $this->token);
-			curl_setopt($curl, CURLOPT_POST, $method == "POST");
-			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
+			
+			if ($method == "POST") {
+				curl_setopt($curl, CURLOPT_POST, true);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
+			}
+			
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cacert.pem');
