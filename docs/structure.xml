@@ -268,7 +268,7 @@
       </method>
     </class>
   </file>
-  <file path="FatZebra.class.php" hash="a21745892738f480e09518da97008ec4" package="FatZebra">
+  <file path="FatZebra.class.php" hash="b73409b7a3938d44e89b3cebfc2fd36b" package="FatZebra">
     <docblock line="2">
       <description><![CDATA[Fat Zebra PHP Gateway Library]]></description>
       <long-description><![CDATA[<p>Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
@@ -287,7 +287,7 @@ or https://www.fatzebra.com.au/help for support.</p>
       <tag line="2" name="package" description="FatZebra"/>
     </docblock>
     <markers>
-      <todo line="188">captures, recurring</todo>
+      <todo line="193">captures, recurring</todo>
     </markers>
     <class final="false" abstract="false" namespace="FatZebra" line="26" package="Default">
       <name>Gateway</name>
@@ -337,385 +337,393 @@ or https://www.fatzebra.com.au/help for support.</p>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="60" package="">
+      <property final="false" static="false" visibility="public" line="55" package="Default">
+        <name>$timeout</name>
+        <default><![CDATA[5]]></default>
+        <docblock line="52">
+          <description><![CDATA[The connection timeout]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="65" package="">
         <name>__construct</name>
         <type>function</type>
-        <docblock line="52">
+        <docblock line="57">
           <description><![CDATA[Creates a new instance of the Fat Zebra gateway object]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="52" name="param" description="the username for the gateway" type="string" variable="$username">
+          <tag line="57" name="param" description="the username for the gateway" type="string" variable="$username">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="52" name="param" description="the token for the gateway" type="string" variable="$token">
+          <tag line="57" name="param" description="the token for the gateway" type="string" variable="$token">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="52" name="param" description="indicates if the test mode should be used or not" type="boolean" variable="$test_mode">
+          <tag line="57" name="param" description="indicates if the test mode should be used or not" type="boolean" variable="$test_mode">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="52" name="param" description="the URL for the Fat Zebra gateway" type="string" variable="$gateway_url">
+          <tag line="57" name="param" description="the URL for the Fat Zebra gateway" type="string" variable="$gateway_url">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="52" name="return" description="" type="\FatZebra\Gateway">
+          <tag line="57" name="return" description="" type="\FatZebra\Gateway">
             <type by_reference="false">\FatZebra\Gateway</type>
           </tag>
         </docblock>
-        <argument line="60">
+        <argument line="65">
           <name>$username</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="60">
+        <argument line="65">
           <name>$token</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="60">
+        <argument line="65">
           <name>$test_mode</name>
           <default><![CDATA[true]]></default>
           <type/>
         </argument>
-        <argument line="60">
+        <argument line="65">
           <name>$gateway_url</name>
           <default><![CDATA[null]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="78" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="83" package="">
         <name>purchase</name>
         <type>function</type>
-        <docblock line="73">
+        <docblock line="78">
           <description><![CDATA[Performs a purchase against the FatZebra gateway]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="73" name="param" description="the purchase request with the purchase details" type="\FatZebra\PurchaseRequest" variable="$request">
+          <tag line="78" name="param" description="the purchase request with the purchase details" type="\FatZebra\PurchaseRequest" variable="$request">
             <type by_reference="false">\FatZebra\PurchaseRequest</type>
           </tag>
-          <tag line="73" name="return" description="" type="\StdObject">
+          <tag line="78" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="78">
+        <argument line="83">
           <name>$request</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="97" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="102" package="">
         <name>token_purchase</name>
         <type>function</type>
-        <docblock line="89">
+        <docblock line="94">
           <description><![CDATA[Performs a purchase against the FatZebra gateway with a tokenized credit card]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="89" name="param" description="the card token" type="string" variable="$token">
+          <tag line="94" name="param" description="the card token" type="string" variable="$token">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="89" name="param" description="the purchase amount" type="float" variable="$amount">
+          <tag line="94" name="param" description="the purchase amount" type="float" variable="$amount">
             <type by_reference="false">float</type>
           </tag>
-          <tag line="89" name="param" description="the purchase reference" type="string" variable="$reference">
+          <tag line="94" name="param" description="the purchase reference" type="string" variable="$reference">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="89" name="param" description="the card verification value - optional but recommended" type="string" variable="$cvv">
+          <tag line="94" name="param" description="the card verification value - optional but recommended" type="string" variable="$cvv">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="89" name="return" description="" type="\StdObject">
+          <tag line="94" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="97">
+        <argument line="102">
           <name>$token</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="97">
+        <argument line="102">
           <name>$amount</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="97">
+        <argument line="102">
           <name>$reference</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="97">
+        <argument line="102">
           <name>$cvv</name>
           <default><![CDATA[null]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="121" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="126" package="">
         <name>refund</name>
         <type>function</type>
-        <docblock line="114">
+        <docblock line="119">
           <description><![CDATA[Performs a refund against the FatZebra gateway]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="114" name="param" description="the original transaction ID to be refunded" type="string" variable="$transaction_id">
+          <tag line="119" name="param" description="the original transaction ID to be refunded" type="string" variable="$transaction_id">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="114" name="param" description="the amount to be refunded" type="float" variable="$amount">
+          <tag line="119" name="param" description="the amount to be refunded" type="float" variable="$amount">
             <type by_reference="false">float</type>
           </tag>
-          <tag line="114" name="param" description="the refund reference" type="string" variable="$reference">
+          <tag line="119" name="param" description="the refund reference" type="string" variable="$reference">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="114" name="return" description="" type="\StdObject">
+          <tag line="119" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="121">
+        <argument line="126">
           <name>$transaction_id</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="121">
+        <argument line="126">
           <name>$amount</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="121">
+        <argument line="126">
           <name>$reference</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="142" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="147" package="">
         <name>get_purchase</name>
         <type>function</type>
-        <docblock line="137">
+        <docblock line="142">
           <description><![CDATA[Retrieves a purchase from the FatZebra gateway]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="137" name="param" description="the purchase ID" type="string" variable="$reference">
+          <tag line="142" name="param" description="the purchase ID" type="string" variable="$reference">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="137" name="return" description="" type="\StdObject">
+          <tag line="142" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="142">
+        <argument line="147">
           <name>$reference</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="152" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="157" package="">
         <name>get_refund</name>
         <type>function</type>
-        <docblock line="147">
+        <docblock line="152">
           <description><![CDATA[Retrieves a refund from the FatZebra gateway]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="147" name="param" description="the refund ID" type="string" variable="$reference">
+          <tag line="152" name="param" description="the refund ID" type="string" variable="$reference">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="147" name="return" description="" type="\StdObject">
+          <tag line="152" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="152">
+        <argument line="157">
           <name>$reference</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="165" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="170" package="">
         <name>tokenize</name>
         <type>function</type>
-        <docblock line="157">
+        <docblock line="162">
           <description><![CDATA[Created a new tokenized credit card]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="157" name="param" description="the card holders name" type="string" variable="$card_holder">
+          <tag line="162" name="param" description="the card holders name" type="string" variable="$card_holder">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="157" name="param" description="the card number" type="string" variable="$card_number">
+          <tag line="162" name="param" description="the card number" type="string" variable="$card_number">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="157" name="param" description="the card expiry date (mm/yyyy format)" type="string" variable="$expiry_date">
+          <tag line="162" name="param" description="the card expiry date (mm/yyyy format)" type="string" variable="$expiry_date">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="157" name="param" description="the card verification value" type="string" variable="$cvv">
+          <tag line="162" name="param" description="the card verification value" type="string" variable="$cvv">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="157" name="return" description="" type="\StdObject">
+          <tag line="162" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="165">
+        <argument line="170">
           <name>$card_holder</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="165">
+        <argument line="170">
           <name>$card_number</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="165">
+        <argument line="170">
           <name>$expiry_date</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="165">
+        <argument line="170">
           <name>$cvv</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="private" namespace="FatZebra" line="200" package="">
+      <method final="false" abstract="false" static="false" visibility="private" namespace="FatZebra" line="205" package="">
         <name>do_request</name>
         <type>function</type>
-        <docblock line="193">
+        <docblock line="198">
           <description><![CDATA[Performs the request against the Fat Zebra gateway]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="193" name="param" description="the request method (&quot;POST&quot; or &quot;GET&quot;)" type="string" variable="$method">
+          <tag line="198" name="param" description="the request method (&quot;POST&quot; or &quot;GET&quot;)" type="string" variable="$method">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="193" name="param" description="the request URI (e.g. /purchases, /credit_cards etc)" type="string" variable="$uri">
+          <tag line="198" name="param" description="the request URI (e.g. /purchases, /credit_cards etc)" type="string" variable="$uri">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="193" name="param" description="the request payload (if a POST request)" type="Array" variable="$payload">
+          <tag line="198" name="param" description="the request payload (if a POST request)" type="Array" variable="$payload">
             <type by_reference="false">Array</type>
           </tag>
-          <tag line="193" name="return" description="" type="\StdObject">
+          <tag line="198" name="return" description="" type="\StdObject">
             <type by_reference="false">\StdObject</type>
           </tag>
         </docblock>
-        <argument line="200">
+        <argument line="205">
           <name>$method</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="200">
+        <argument line="205">
           <name>$uri</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="200">
+        <argument line="205">
           <name>$payload</name>
           <default><![CDATA[null]]></default>
           <type/>
         </argument>
       </method>
     </class>
-    <class final="false" abstract="false" namespace="FatZebra" line="250" package="Default">
+    <class final="false" abstract="false" namespace="FatZebra" line="256" package="Default">
       <name>PurchaseRequest</name>
       <full_name>\FatZebra\PurchaseRequest</full_name>
       <extends/>
-      <docblock line="247">
+      <docblock line="253">
         <description><![CDATA[The Fat Zebra Purchase Request]]></description>
         <long-description><![CDATA[]]></long-description>
       </docblock>
-      <property final="false" static="false" visibility="private" line="254" package="Default">
+      <property final="false" static="false" visibility="private" line="260" package="Default">
         <name>$amount</name>
         <default><![CDATA[0.00]]></default>
-        <docblock line="251">
+        <docblock line="257">
           <description><![CDATA[The purchase amount]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="private" line="259" package="Default">
+      <property final="false" static="false" visibility="private" line="265" package="Default">
         <name>$reference</name>
         <default><![CDATA[""]]></default>
-        <docblock line="256">
+        <docblock line="262">
           <description><![CDATA[The purchase reference]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="private" line="264" package="Default">
+      <property final="false" static="false" visibility="private" line="270" package="Default">
         <name>$card_holder</name>
         <default><![CDATA[""]]></default>
-        <docblock line="261">
+        <docblock line="267">
           <description><![CDATA[The card holders name]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="private" line="269" package="Default">
+      <property final="false" static="false" visibility="private" line="275" package="Default">
         <name>$card_number</name>
         <default><![CDATA[""]]></default>
-        <docblock line="266">
+        <docblock line="272">
           <description><![CDATA[The card number]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="private" line="274" package="Default">
+      <property final="false" static="false" visibility="private" line="280" package="Default">
         <name>$expiry</name>
         <default><![CDATA[""]]></default>
-        <docblock line="271">
+        <docblock line="277">
           <description><![CDATA[The card expiry date]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="private" line="279" package="Default">
+      <property final="false" static="false" visibility="private" line="285" package="Default">
         <name>$cvv</name>
         <default><![CDATA[""]]></default>
-        <docblock line="276">
+        <docblock line="282">
           <description><![CDATA[The Card Verification Value]]></description>
           <long-description><![CDATA[]]></long-description>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="291" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="297" package="">
         <name>__construct</name>
         <type>function</type>
-        <docblock line="281">
+        <docblock line="287">
           <description><![CDATA[Creates a new instance of the PurchaseRequest]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="281" name="param" description="the purchase amount" type="float" variable="$amount">
+          <tag line="287" name="param" description="the purchase amount" type="float" variable="$amount">
             <type by_reference="false">float</type>
           </tag>
-          <tag line="281" name="param" description="the reference for the purchase" type="string" variable="$reference">
+          <tag line="287" name="param" description="the reference for the purchase" type="string" variable="$reference">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="281" name="param" description="the card holders name" type="string" variable="$card_holder">
+          <tag line="287" name="param" description="the card holders name" type="string" variable="$card_holder">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="281" name="param" description="the card number" type="string" variable="$card_number">
+          <tag line="287" name="param" description="the card number" type="string" variable="$card_number">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="281" name="param" description="the card expiry (mm/yyyy format)" type="string" variable="$expiry">
+          <tag line="287" name="param" description="the card expiry (mm/yyyy format)" type="string" variable="$expiry">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="281" name="param" description="the card verification value" type="string" variable="$cvv">
+          <tag line="287" name="param" description="the card verification value" type="string" variable="$cvv">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="281" name="return" description="" type="\FatZebra\PurchaseRequest">
+          <tag line="287" name="return" description="" type="\FatZebra\PurchaseRequest">
             <type by_reference="false">\FatZebra\PurchaseRequest</type>
           </tag>
         </docblock>
-        <argument line="291">
+        <argument line="297">
           <name>$amount</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="291">
+        <argument line="297">
           <name>$reference</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="291">
+        <argument line="297">
           <name>$card_holder</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="291">
+        <argument line="297">
           <name>$card_number</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="291">
+        <argument line="297">
           <name>$expiry</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
-        <argument line="291">
+        <argument line="297">
           <name>$cvv</name>
           <default><![CDATA[]]></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="317" package="">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="FatZebra" line="323" package="">
         <name>to_array</name>
         <type>function</type>
-        <docblock line="313">
+        <docblock line="319">
           <description><![CDATA[Returns the request as a hash/assoc. array]]></description>
           <long-description><![CDATA[]]></long-description>
-          <tag line="313" name="return" description="" type="\Array">
+          <tag line="319" name="return" description="" type="\Array">
             <type by_reference="false">\Array</type>
           </tag>
         </docblock>

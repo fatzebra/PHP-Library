@@ -50,6 +50,11 @@
 		public $test_mode = true; // This needs to be set to false for production use.
 
 		/**
+		* The connection timeout
+		*/
+		public $timeout = 5;
+
+		/**
 		* Creates a new instance of the Fat Zebra gateway object
 		* @param string $username the username for the gateway
 		* @param string $token the token for the gateway
@@ -219,6 +224,7 @@
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cacert.pem');
+			curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
 
 			$data = curl_exec($curl); 
 			
