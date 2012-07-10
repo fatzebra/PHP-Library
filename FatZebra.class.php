@@ -7,6 +7,8 @@
 	* Updated 19 April 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	*  - Added refund support
 	*  - Added tokenization support
+	* Updated 10 July 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
+	*  - Added support for Plans, Customers and Subscriptions
 	*
 	* The original source for this library, including its tests can be found at
 	* https://github.com/fatzebra/PHP-Library
@@ -190,7 +192,116 @@
 			return $this->do_request("POST", "/credit_cards", $payload);
 		}
 
-		// TODO: captures, recurring
+		/**
+		* Create a new customer for recurring subscriptions
+		* @param string $first_name the customers first name
+		* @param string $last_name the customers last name
+		* @param string $reference your system reference (i.e. record ID etc)
+		* @param string $email the customers email address
+		* @param string $card_holder the card holders name (likely to be the same as the customers name)
+		* @param string $card_number the credit card number
+		* @param string $card_expiry the card expiry date (mm/yyyy)
+		* @param string $cvv the CVV for the credit card
+		* @return \StdObject
+		*/
+		public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv) {
+			if(is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException("First name is a required field.");			
+			if(is_null($last_name) || (strlen($last_name) === 0)) throw new \InvalidArgumentException("Last name is a required field.");
+			if(is_null($email) || (strlen($email) === 0)) throw new \InvalidArgumentException("Email is a required field.");
+			if(is_null($reference) || (strlen($reference) === 0)) throw new \InvalidArgumentException("Reference is a required field.");
+
+			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");			
+			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
+			if(is_null($card_expiry)) throw new \InvalidArgumentException("Expiry is a required field.");	
+			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
+
+			$payload = array(
+				"first_name" => $first_name,
+				"last_name" => $last_name,
+				"reference" => $reference,
+				"email" => $email,
+				"card" => array(
+					"card_holder" => $card_holder,
+					"card_number" => $card_number,
+					"expiry_date" => $card_expiry,
+					));
+
+			return $this->do_request("POST", "/customers", $payload);
+		}
+
+		/**
+		* Subscribe a customer to a plan
+		*
+		* @param string $customer_id the Fat Zebra Customer ID or your internal reference
+		* @param string $plan_id the Fat Zebra Plan ID or the reference
+		* @param string $frequency the billing frequency/interval. This can be: Daily, Weekly, Fortnightly, Monthly, Quarterly, Bi-Annually or Annually
+		* @param Date $start_date the start date of the subscription (the first billing date)
+		* @param string $reference the reference for this subscription
+		* @param bool $is_active indicates if the subscription is active or not
+		* @return \StdObject
+		*/
+		public function create_subscription($customer_id, $plan_id, $frequency, $start_date, $reference, $is_active = true) {
+			if(is_null($customer_id) || (strlen($customer_id) === 0)) throw new \InvalidArgumentException("Customer ID or Reference is a required field.");			
+			if(is_null($plan_id) || (strlen($plan_id) === 0)) throw new \InvalidArgumentException("Plan ID or Reference is a required field.");
+			
+			if(is_null($frequency) || (strlen($frequency) === 0)) throw new \InvalidArgumentException("Email is a required field.");
+			if (!in_array($frequency, array("Daily", "Weekly", "Fortnightly", "Monthly", "Quarterly", "Bi-Annually", "Annually"))) throw new \InvalidArgumentException("Invalid Frequency, Acceptable values are: Daily, Weekly, Fortnightly, Monthly, Quarterly, Bi-Annually or Annually");
+			
+			$payload = array(
+				"customer" => $customer_id,
+				"plan" => $plan_id,
+				"frequency" => $frequency,
+				"start_date" => date("Y-m-d", $start_date),
+				"reference" => $reference,
+				"is_active" => $is_active
+				);
+
+			return $this->do_request("POST", "/subscriptions", $payload);
+		}
+
+		/**
+		* Cancel an existing subscription
+		* @param string $subscription_id the subscription ID
+		*/
+		public function cancel_subscription($subscription_id) {
+			$payload = array("is_active" => false);
+			return $this->do_request("PUT", "/subscriptions/" . $subscription_id, $payload);
+		}
+
+		/**
+		* Resume a cancelled subscription
+		* @param string $subscription_id the subscription ID
+		*/
+		public function resume_subscription($subscription_id) {
+			$payload = array("is_active" => true);
+			return $this->do_request("PUT", "/subscriptions/" . $subscription_id, $payload);
+		}
+
+		/**
+		* Create a Plan for subscriptions
+		* @param string $name the plan name
+		* @param int $amount the amount for the plan
+		* @param string $reference the plan reference
+		* @param string $description the plan description
+		* @return \StdObject
+		*/
+		public function create_plan($name, $amount, $reference, $description) {
+			if(is_null($name) || (strlen($name) === 0)) throw new \InvalidArgumentException("Plan Name is a required field.");			
+			if(is_null($amount) || ((int)$amount < 1)) throw new \InvalidArgumentException("Amount is invalid.");
+			if(is_null($reference) || (strlen($reference) === 0)) throw new \InvalidArgumentException("Reference is a required field.");
+			if(is_null($description) || (strlen($description) === 0)) throw new \InvalidArgumentException("Description is a required field.");
+			
+			$payload = array(
+				"name" => $name,
+				"amount" => (int)$amount,
+				"reference" => $reference,
+				"description" => $description);
+
+			return $this->do_request("POST", "/plans", $payload);
+		}
+
+
+		// TODO: auth/captures
 
 
 		/************** Private functions ***************/
@@ -205,9 +316,11 @@
 		private function do_request($method, $uri, $payload = null) {
 			$curl = curl_init();
 			if(is_null($this->api_version)) {
-				curl_setopt($curl, CURLOPT_URL, $this->url . $uri);
+				$url = $this->url . $uri;
+				curl_setopt($curl, CURLOPT_URL, $url);
 			} else {
-				curl_setopt($curl, CURLOPT_URL, $this->url . "/v" . $this->api_version . $uri);	
+				$url = $this->url . "/v" . $this->api_version . $uri;
+				curl_setopt($curl, CURLOPT_URL, $url);	
 			}
 
 			$payload["test"] = $this->test_mode;
@@ -216,11 +329,15 @@
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $this->username .":". $this->token);
 			
-			if ($method == "POST") {
+			if ($method == "POST" || $method == "PUT") {
 				curl_setopt($curl, CURLOPT_POST, true);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
 			}
 			
+			if ($method == "PUT") {
+				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+			}
+
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cacert.pem');
