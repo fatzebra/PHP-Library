@@ -110,7 +110,8 @@
       
       $result = $gw->refund("12345", 100.00, "ERRORTEST");
 
-			$this->assertFalse($result->successful);
+			$this->assertTrue($result->successful);
+			$this->assertFalse($result->response->successful);
 			$this->assertEquals($result->errors[0], "Original transaction is required");
 		}
 
