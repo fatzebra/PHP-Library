@@ -89,7 +89,7 @@
 				$customer_ip = "127.0.0.1";
 			}
 
-			$payload = array_merge($request->	to_array(), array("customer_ip" => $customer_ip));
+			$payload = array_merge($request->to_array(), array("customer_ip" => $customer_ip));
 			return $this->do_request("POST", "/purchases", $payload);
 		}
 
