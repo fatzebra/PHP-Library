@@ -24,6 +24,8 @@ Copy the files FatZebra.class.php and cacert.pem to your project lib folder (or 
 Usage
 -----
 
+*Regular Purchase*
+
 ```php
 <?php
   session_start();
@@ -43,6 +45,30 @@ Usage
 	} catch(Exception $ex) {
 		print "Error: " . $ex->getMessage();
 	}
+?>
+```
+
+*Token Purchase*
+```php
+<?php
+  session_start();
+  include_once("../FatZebra.class.php");
+  define("USERNAME", "havanaco");
+  define("TOKEN", "673bb3aaca9a1961bfa3c61917594dc7c4a00b71");
+  define("TEST_MODE", true);
+
+  $amount = 100;
+  $reference = "your ref";
+
+  try {
+    $gateway = new FatZebra\Gateway(USERNAME, TOKEN, TEST_MODE);
+    $response = $gateway->token_purchase($_POST['token'], $amount, $reference);
+
+    $_SESSION['response'] = $response;
+    header("Location: index.php");
+  } catch(Exception $ex) {
+    print "Error: " . $ex->getMessage();
+  }
 ?>
 ```
 
