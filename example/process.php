@@ -7,7 +7,7 @@
 
   try {
   	$gateway = new FatZebra\Gateway(USERNAME, TOKEN, TEST_MODE);
-  	$purchase_request = new FatZebra\PurchaseRequest($_POST['amount'], $_POST['reference'], $_POST['name'], $_POST['card_number'], $_POST['card_expiry_month'] ."/". $_POST['card_expiry_month'], $_POST['card_cvv']);
+  	$purchase_request = new FatZebra\PurchaseRequest($_POST['amount'], $_POST['reference'], $_POST['name'], $_POST['card_number'], $_POST['card_expiry_month'] ."/". $_POST['card_expiry_year'], $_POST['card_cvv']);
 
   	$response = $gateway->purchase($purchase_request);
 
