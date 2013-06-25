@@ -19,7 +19,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
 			$result = $gw->purchase($req);
 
 			$this->assertTrue($result->successful);
@@ -34,7 +34,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$req = new FatZebra\PurchaseRequest(100.05, "UNITTEST" . rand(), "Jim Smith", "5555555555554444", "05/2013", 123);
+			$req = new FatZebra\PurchaseRequest(100.05, "UNITTEST" . rand(), "Jim Smith", "5555555555554444", "05/2023", 123);
 			$result = $gw->purchase($req);
 
 			$this->assertTrue($result->successful);
@@ -49,7 +49,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012345", "05/2013", 123);
+			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012345", "05/2023", 123);
 			$result = $gw->purchase($req);
 
 			$this->assertFalse($result->successful);
@@ -64,7 +64,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+			$req = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
 			$result = $gw->purchase($req);
 
 			$purch = $gw->get_purchase($result->response->id);
@@ -92,7 +92,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
 			$result = $gw->purchase($purch_request);
 
 			$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
@@ -110,8 +110,7 @@
       
       $result = $gw->refund("12345", 100.00, "ERRORTEST");
 
-			$this->assertTrue($result->successful);
-			$this->assertFalse($result->response->successful);
+			$this->assertFalse($result->successful);
 			$this->assertEquals($result->errors[0], "Original transaction is required");
 		}
 
@@ -122,7 +121,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+			$purch_request = new FatZebra\PurchaseRequest(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
 			$result = $gw->purchase($purch_request);
 
 			$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
@@ -139,7 +138,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$result = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", "123");
+			$result = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", "123");
 
 			$this->assertTrue($result->successful);
 			$this->assertEquals($result->response->card_holder, "Billy Blanks");
@@ -153,7 +152,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$result = $gw->tokenize("Billy Blanks", "5123456789012345", "05/2013", "123");
+			$result = $gw->tokenize("Billy Blanks", "5123456789012345", "05/2023", "123");
 
 			$this->assertFalse($result->successful);
 			$this->assertEquals($result->errors[0], "Card number is invalid");
@@ -166,7 +165,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", "123");
+			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", "123");
 
 			$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand(), 123);
 
@@ -182,7 +181,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2013", 123);
+			$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", 123);
 
 			$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand());
 
@@ -211,7 +210,7 @@
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
 
-			$result = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", "UNITTEST" . rand(), "Mark Smith", "5123456789012346", "05/2013", 123);
+			$result = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", "UNITTEST" . rand(), "Mark Smith", "5123456789012346", "05/2023", 123);
 
 			$this->assertTrue($result->successful);
 			$this->assertNotNull($result->response->id);
@@ -228,7 +227,7 @@
 			$plan_ref = "PLAN" . rand();
 			$subscription_ref = "SUB" . rand();
 
-			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2013", 123);
+			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2023", 123);
 			$gw->create_plan("test", 100, $plan_ref, "test plan");
 
 
@@ -250,7 +249,7 @@
 			$plan_ref = "PLAN" . rand();
 			$subscription_ref = "SUB" . rand();
 
-			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2013", 123);
+			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2023", 123);
 			$gw->create_plan("test", 100, $plan_ref, "test plan");
 
 
@@ -275,7 +274,7 @@
 			$plan_ref = "PLAN" . rand();
 			$subscription_ref = "SUB" . rand();
 
-			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2013", 123);
+			$cust = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", $customer_ref, "Mark Smith", "5123456789012346", "05/2023", 123);
 			$gw->create_plan("test", 100, $plan_ref, "test plan");
 
 
