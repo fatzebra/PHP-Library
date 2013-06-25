@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
-	* 
+	*
 	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 19 April 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
@@ -21,7 +21,8 @@
 	* @package FatZebra
 	*/
 	namespace FatZebra;
-	
+
+	require 'Helpers.php';
 	/**
 	* The Fat Zebra Gateway class for interfacing with Fat Zebra
 	*/
@@ -30,22 +31,22 @@
 		* The URL of the Fat Zebra gateway
 		*/
 		public $url = "https://gateway.fatzebra.com.au";
-		
+
 		/**
 		* The API version for the requests
 		*/
 		public $api_version = "1.0";
-		
+
 		/**
 		* The gateway username
 		*/
 		public $username;
-		
+
 		/**
 		* The gateway token
 		*/
 		public $token;
-		
+
 		/**
 		* Indicates if test mode should be used or not
 		*/
@@ -67,7 +68,7 @@
 		public function __construct($username, $token, $test_mode = true, $gateway_url = null) {
 			if (is_null($username) || strlen($username) === 0) throw new \InvalidArgumentException("Username is required");
 			$this->username = $username;
-			
+
 			if (is_null($token) || strlen($token) === 0) throw new \InvalidArgumentException("Token is required");
 			$this->token = $token;
 
@@ -170,9 +171,9 @@
 		* @return \StdObject
 		*/
 		public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
-			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");			
+			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");
 			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
-			if(is_null($expiry_date)) throw new \InvalidArgumentException("Expiry is a required field.");	
+			if(is_null($expiry_date)) throw new \InvalidArgumentException("Expiry is a required field.");
 			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 
 
@@ -205,14 +206,14 @@
 		* @return \StdObject
 		*/
 		public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv) {
-			if(is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException("First name is a required field.");			
+			if(is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException("First name is a required field.");
 			if(is_null($last_name) || (strlen($last_name) === 0)) throw new \InvalidArgumentException("Last name is a required field.");
 			if(is_null($email) || (strlen($email) === 0)) throw new \InvalidArgumentException("Email is a required field.");
 			if(is_null($reference) || (strlen($reference) === 0)) throw new \InvalidArgumentException("Reference is a required field.");
 
-			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");			
+			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");
 			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
-			if(is_null($card_expiry)) throw new \InvalidArgumentException("Expiry is a required field.");	
+			if(is_null($card_expiry)) throw new \InvalidArgumentException("Expiry is a required field.");
 			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 
 			$payload = array(
@@ -235,23 +236,32 @@
 		* @param string $customer_id the Fat Zebra Customer ID or your internal reference
 		* @param string $plan_id the Fat Zebra Plan ID or the reference
 		* @param string $frequency the billing frequency/interval. This can be: Daily, Weekly, Fortnightly, Monthly, Quarterly, Bi-Annually or Annually
-		* @param Date $start_date the start date of the subscription (the first billing date)
+		* @param string $start_date the start date of the subscription (the first billing date)
+		* @param string $end_date the end date of the subscription
 		* @param string $reference the reference for this subscription
 		* @param bool $is_active indicates if the subscription is active or not
 		* @return \StdObject
 		*/
-		public function create_subscription($customer_id, $plan_id, $frequency, $start_date, $reference, $is_active = true) {
-			if(is_null($customer_id) || (strlen($customer_id) === 0)) throw new \InvalidArgumentException("Customer ID or Reference is a required field.");			
+		public function create_subscription($customer_id, $plan_id, $frequency, $start_date, $reference, $is_active = true, $end_date = null) {
+			if(is_null($customer_id) || (strlen($customer_id) === 0)) throw new \InvalidArgumentException("Customer ID or Reference is a required field.");
 			if(is_null($plan_id) || (strlen($plan_id) === 0)) throw new \InvalidArgumentException("Plan ID or Reference is a required field.");
-			
+
 			if(is_null($frequency) || (strlen($frequency) === 0)) throw new \InvalidArgumentException("Email is a required field.");
-			if (!in_array($frequency, array("Daily", "Weekly", "Fortnightly", "Monthly", "Quarterly", "Bi-Annually", "Annually"))) throw new \InvalidArgumentException("Invalid Frequency, Acceptable values are: Daily, Weekly, Fortnightly, Monthly, Quarterly, Bi-Annually or Annually");
-			
+			if(!in_array($frequency, array("Daily", "Weekly", "Fortnightly", "Monthly", "Quarterly", "Bi-Annually", "Annually"))) throw new \InvalidArgumentException("Invalid Frequency, Acceptable values are: Daily, Weekly, Fortnightly, Monthly, Quarterly, Bi-Annually or Annually");
+
+			if(!Helpers::isTimestamp($start_date)){
+				throw new \InvalidArgumentException("Invalid start date - must be a timestamp");
+			}
+
+			if(isset($end_date) && !Helpers::isTimestamp($end_date)){
+				throw new \InvalidArgumentException("Invalid end date - must be a timestamp");
+			}
 			$payload = array(
-				"customer" => $customer_id,
+				"customer" => (string) $customer_id,
 				"plan" => $plan_id,
 				"frequency" => $frequency,
 				"start_date" => date("Y-m-d", $start_date),
+				"end_date" => isset($end_date) ? date("Y-m-d", $end_date) : null,
 				"reference" => $reference,
 				"is_active" => $is_active
 				);
@@ -286,11 +296,11 @@
 		* @return \StdObject
 		*/
 		public function create_plan($name, $amount, $reference, $description) {
-			if(is_null($name) || (strlen($name) === 0)) throw new \InvalidArgumentException("Plan Name is a required field.");			
+			if(is_null($name) || (strlen($name) === 0)) throw new \InvalidArgumentException("Plan Name is a required field.");
 			if(is_null($amount) || ((int)$amount < 1)) throw new \InvalidArgumentException("Amount is invalid.");
 			if(is_null($reference) || (strlen($reference) === 0)) throw new \InvalidArgumentException("Reference is a required field.");
 			if(is_null($description) || (strlen($description) === 0)) throw new \InvalidArgumentException("Description is a required field.");
-			
+
 			$payload = array(
 				"name" => $name,
 				"amount" => (int)$amount,
@@ -320,20 +330,20 @@
 				curl_setopt($curl, CURLOPT_URL, $url);
 			} else {
 				$url = $this->url . "/v" . $this->api_version . $uri;
-				curl_setopt($curl, CURLOPT_URL, $url);	
+				curl_setopt($curl, CURLOPT_URL, $url);
 			}
 
 			$payload["test"] = $this->test_mode;
-			
+
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $this->username .":". $this->token);
-			
+
 			if ($method == "POST" || $method == "PUT") {
 				curl_setopt($curl, CURLOPT_POST, true);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
 			}
-			
+
 			if ($method == "PUT") {
 				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
 			}
@@ -343,8 +353,8 @@
 			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cacert.pem');
 			curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
 
-			$data = curl_exec($curl); 
-			
+			$data = curl_exec($curl);
+
 			if (curl_errno($curl) !== 0) {
 				throw new \Exception("cURL error: " . curl_error($curl));
 			}
@@ -375,27 +385,27 @@
 		* The purchase amount
 		*/
 		private $amount = 0.00;
-		
+
 		/**
 		* The purchase reference
 		*/
 		private $reference = "";
-		
+
 		/**
 		* The card holders name
 		*/
 		private $card_holder = "";
-		
+
 		/**
 		* The card number
 		*/
 		private $card_number = "";
-		
+
 		/**
 		* The card expiry date
 		*/
 		private $expiry = "";
-		
+
 		/**
 		* The Card Verification Value
 		*/
@@ -422,16 +432,16 @@
 
 			if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");
 			$this->card_holder = $card_holder;
-			
+
 			if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
 			$this->card_number = $card_number;
-			
+
 			if(is_null($expiry)) throw new \InvalidArgumentException("Expiry is a required field.");
 			$this->expiry = $expiry;
-			
+
 			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 			$this->cvv = $cvv;
-		}		
+		}
 
 		/**
 		* Returns the request as a hash/assoc. array
