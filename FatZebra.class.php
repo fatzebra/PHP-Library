@@ -53,9 +53,11 @@
 		public $test_mode = true; // This needs to be set to false for production use.
 
 		/**
-		* The connection timeout
+		* The connection timeout - the maximum processing time for Fat Zebra is 30 seconds,
+		* however in the event of a timeout the transaction will be re-queried which could increase the
+		* processing time up to 50 seconds. Currently this is, on average, below 10 seconds.
 		*/
-		public $timeout = 5;
+		public $timeout = 50;
 
 		/**
 		* Creates a new instance of the Fat Zebra gateway object
