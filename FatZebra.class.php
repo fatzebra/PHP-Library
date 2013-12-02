@@ -1,6 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
+	* Version 1.1.0
 	*
 	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
@@ -27,6 +28,11 @@
 	* The Fat Zebra Gateway class for interfacing with Fat Zebra
 	*/
 	class Gateway {
+		/** 
+		* The version of this library
+		*/
+		public $version = "1.1.0";
+
 		/**
 		* The URL of the Fat Zebra gateway
 		*/
@@ -340,10 +346,11 @@
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $this->username .":". $this->token);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array("User-agent: FatZebra PHP Library " . $this->version));
 
 			if ($method == "POST" || $method == "PUT") {
 				curl_setopt($curl, CURLOPT_POST, true);
-				curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+				curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json", "User-agent: FatZebra PHP Library " . $this->version));
 				curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
 			}
 
