@@ -28,7 +28,7 @@
 	* The Fat Zebra Gateway class for interfacing with Fat Zebra
 	*/
 	class Gateway {
-		/** 
+		/**
 		* The version of this library
 		*/
 		public $version = "1.1.0";
@@ -423,6 +423,11 @@
 		private $cvv = "";
 
 		/**
+		* Extra order data for Retail Decisions fraud detection
+		*/
+		private $fraud_data = null;
+
+		/**
 		* Creates a new instance of the PurchaseRequest
 		* @param float $amount the purchase amount
 		* @param string $reference the reference for the purchase
@@ -432,7 +437,7 @@
 		* @param string $cvv the card verification value
 		* @return PurchaseRequest
 		*/
-		public function __construct($amount, $reference, $card_holder, $card_number, $expiry, $cvv) {
+		public function __construct($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null) {
 			if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
 			if((float)$amount < 0) throw new \InvalidArgumentException("Amount is invalid.");
 			$this->amount = $amount;
@@ -452,6 +457,8 @@
 
 			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 			$this->cvv = $cvv;
+
+			$this->fraud_data = $fraud_data;
 		}
 
 		/**
@@ -460,12 +467,18 @@
 		*/
 		public function to_array() {
 			$amount_as_int = (int)($this->amount * 100);
-			return array("card_holder" => $this->card_holder,
-						 "card_number" => $this->card_number,
-						 "card_expiry" => $this->expiry,
-						 "cvv" => $this->cvv,
-						 "reference" => $this->reference,
-						 "amount" => $amount_as_int);
+			$data = array(
+				"card_holder" => $this->card_holder,
+				"card_number" => $this->card_number,
+				"card_expiry" => $this->expiry,
+				"cvv" => $this->cvv,
+				"reference" => $this->reference,
+				"amount" => $amount_as_int
+			);
+			if (!is_null($this->fraud_data)) {
+				$data['fraud'] = $this->fraud_data;
+			}
+			return $data;
 		}
 	}
 
