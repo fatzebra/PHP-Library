@@ -8,6 +8,7 @@
 	*/
 	define("GW_URL", "https://gateway.sandbox.fatzebra.com.au");
 
+  $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	/**
 	* The gateway tests
 	*/	

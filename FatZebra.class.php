@@ -92,11 +92,7 @@
 		* @return \StdObject
 		*/
 		public function purchase($request) {
-			if (isset($_SERVER['REMOTE_ADDR'])) {
-				$customer_ip = $_SERVER['REMOTE_ADDR'];
-			} else {
-				$customer_ip = "127.0.0.1";
-			}
+			$customer_ip = $this->get_customer_ip();
 
 			$payload = array_merge($request->to_array(), array("customer_ip" => $customer_ip));
 			return $this->do_request("POST", "/purchases", $payload);
@@ -111,11 +107,7 @@
 		* @return \StdObject
 		*/
 		public function token_purchase($token, $amount, $reference, $cvv = null) {
-			if (isset($_SERVER['REMOTE_ADDR'])) {
-				$customer_ip = $_SERVER['REMOTE_ADDR'];
-			} else {
-				$customer_ip = "127.0.0.1";
-			}
+			$customer_ip = $this->get_customer_ip();
 
 			$payload = array(
 				"customer_ip" => $customer_ip,
@@ -185,11 +177,7 @@
 			if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 
 
-			if (isset($_SERVER['REMOTE_ADDR'])) {
-				$customer_ip = $_SERVER['REMOTE_ADDR'];
-			} else {
-				$customer_ip = "127.0.0.1";
-			}
+			$customer_ip = $this->get_customer_ip();
 
 			$payload = array(
 				"customer_ip" => $customer_ip,
@@ -384,6 +372,21 @@
 			}
 
 			return $response;
+		}
+
+		/**
+		* Fetches the customers 'real' IP address (i.e. pulls out the address from X-Forwarded-For if present)
+		* 
+		* @return String the customers IP address
+		*/
+		private function get_customer_ip() {
+			$customer_ip = $_SERVER['REMOTE_ADDR'];
+      if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $customer_ip = $forwarded_ips[0];
+      }
+
+      return $customer_ip;
 		}
 	}
 
