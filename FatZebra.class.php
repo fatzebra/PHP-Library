@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
-	* Version 1.1.0
+	* Version 1.1.1
 	*
 	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
@@ -31,7 +31,7 @@
 		/**
 		* The version of this library
 		*/
-		public $version = "1.1.0";
+		public $version = "1.1.2";
 
 		/**
 		* The URL of the Fat Zebra gateway
@@ -109,11 +109,16 @@
 		public function token_purchase($token, $amount, $reference, $cvv = null) {
 			$customer_ip = $this->get_customer_ip();
 
+			if (function_exists('bcmul')) {
+				$int_amount = intval(bcmul($amount, 100));
+			} else {
+				$int_amount = intval((round($amount, 2)) * 100);
+			}
 			$payload = array(
 				"customer_ip" => $customer_ip,
 				"card_token" => $token,
 				"cvv" => $cvv,
-				"amount" => intval(round($amount * 100)),
+				"amount" => $int_amount,
 				"reference" => $reference
 				);
 			return $this->do_request("POST", "/purchases", $payload);
@@ -132,9 +137,15 @@
 			if(intval($amount) < 1) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
 			if(is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 
+			if (function_exists('bcmul')) {
+				$int_amount = intval(bcmul($amount, 100));
+			} else {
+				$int_amount = intval((round($amount, 2)) * 100);
+			}
+
 			$payload = array(
 				"transaction_id" => $transaction_id,
-				"amount" => intval(round($amount * 100)),
+				"amount" => $int_amount,
 				"reference" => $reference
 				);
 
@@ -349,13 +360,14 @@
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 			curl_setopt($curl, CURLOPT_SSLVERSION, 3);
-			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cacert.pem');
+			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'ca-bundle.crt');
 			curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
 
 			$data = curl_exec($curl);
 
 			if (curl_errno($curl) !== 0) {
-				throw new \Exception("cURL error: " . curl_error($curl));
+				if (curl_errno($curl) == 28) throw new TimeoutException("cURL Timeout: " . curl_error($curl));
+				throw new \Exception("cURL error " . curl_errno($curl) . ": " . curl_error($curl));
 			}
 			curl_close($curl);
 
@@ -484,5 +496,7 @@
 			return $data;
 		}
 	}
+
+	class TimeoutException extends \Exception {}
 
 ?>

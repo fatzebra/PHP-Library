@@ -40,7 +40,7 @@
 
 			$this->assertTrue($result->successful);
 			$this->assertFalse($result->response->successful);
-			$this->assertEquals($result->response->message, "Declined");
+			$this->assertEquals($result->response->message, "Refer to Card Issuer");
 		}
 
 		/**
