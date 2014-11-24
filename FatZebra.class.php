@@ -481,14 +481,19 @@
 		* @return \Array
 		*/
 		public function to_array() {
-			$amount_as_int = (int)($this->amount * 100);
+			if (function_exists('bcmul')) {
+				$int_amount = intval(bcmul($this->amount, 100));
+			} else {
+				$int_amount = intval((round($this->amount, 2)) * 100);
+			}
+			
 			$data = array(
 				"card_holder" => $this->card_holder,
 				"card_number" => $this->card_number,
 				"card_expiry" => $this->expiry,
 				"cvv" => $this->cvv,
 				"reference" => $this->reference,
-				"amount" => $amount_as_int
+				"amount" => $int_amount
 			);
 			if (!is_null($this->fraud_data)) {
 				$data['fraud'] = $this->fraud_data;
