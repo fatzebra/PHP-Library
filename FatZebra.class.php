@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
-	* Version 1.1.1
+	* Version 1.1.3
 	*
 	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
 	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
@@ -31,7 +31,7 @@
 		/**
 		* The version of this library
 		*/
-		public $version = "1.1.2";
+		public $version = "1.1.3";
 
 		/**
 		* The URL of the Fat Zebra gateway
