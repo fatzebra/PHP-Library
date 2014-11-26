@@ -112,7 +112,8 @@
 			if (function_exists('bcmul')) {
 				$int_amount = intval(bcmul($amount, 100));
 			} else {
-				$int_amount = intval((round($amount, 2)) * 100);
+				$multiplied = round($amount * 100);
+				$int_amount = (int)$multiplied;
 			}
 			$payload = array(
 				"customer_ip" => $customer_ip,
@@ -140,7 +141,8 @@
 			if (function_exists('bcmul')) {
 				$int_amount = intval(bcmul($amount, 100));
 			} else {
-				$int_amount = intval((round($amount, 2)) * 100);
+				$multiplied = round($amount * 100);
+				$int_amount = (int)$multiplied;
 			}
 
 			$payload = array(
@@ -484,7 +486,8 @@
 			if (function_exists('bcmul')) {
 				$int_amount = intval(bcmul($this->amount, 100));
 			} else {
-				$int_amount = intval((round($this->amount, 2)) * 100);
+				$multiplied = round($amount * 100);
+				$int_amount = (int)$multiplied;
 			}
 			
 			$data = array(
