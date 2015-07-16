@@ -2,7 +2,7 @@
 	/**
 	* @package Gateway Tests
 	*/
-	include "FatZebra.class.php";
+	include "vendor/autoload.php";
 	/**
 	* The gateway URL to test against
 	*/
@@ -314,5 +314,3 @@
 			$this->assertNotNull($result->response->id);
 		}
 	}
-
-?>

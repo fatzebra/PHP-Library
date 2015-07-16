@@ -1,6 +1,6 @@
 <?php
   session_start();
-  include_once("../FatZebra.class.php");
+  include_once("../vendor/autoload.php");
   define("USERNAME", "havanaco");
   define("TOKEN", "673bb3aaca9a1961bfa3c61917594dc7c4a00b71");
   define("TEST_MODE", true);

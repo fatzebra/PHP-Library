@@ -1,5 +1,5 @@
 <?php
-	include "FatZebra.class.php";
+	include "vendor/autoload.php";
 
 	class PurchaseRequestTest extends PHPUnit_Framework_TestCase {
 		public function testConstructor() {
@@ -79,4 +79,3 @@
 			
 		}
 	}
-?>
