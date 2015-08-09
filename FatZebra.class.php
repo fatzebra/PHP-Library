@@ -39,6 +39,11 @@
 		public $url = "https://gateway.fatzebra.com.au";
 
 		/**
+		* The sandbox URL of the Fat Zebra gateway
+		*/
+		public $sandbox_url = "https://gateway.sandbox.fatzebra.com.au";
+
+		/**
 		* The API version for the requests
 		*/
 		public $api_version = "1.0";
@@ -81,6 +86,11 @@
 			$this->token = $token;
 
 			$this->test_mode = $test_mode;
+
+			if ($this->test_mode) {
+				$this->url = $this->sandbox_url;
+			}
+
 			if (!is_null($gateway_url)) {
 				$this->url = $gateway_url;
 			}
