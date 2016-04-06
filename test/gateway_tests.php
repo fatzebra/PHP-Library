@@ -11,7 +11,7 @@
   $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	/**
 	* The gateway tests
-	*/	
+	*/
 	class GatewayTest extends PHPUnit_Framework_TestCase {
 		/**
 		* Test a valid purchase
@@ -55,7 +55,7 @@
 
 			$this->assertFalse($result->successful);
 			$this->assertFalse($result->response->successful);
-			$this->assertEquals($result->errors[0], "Card number is invalid");	
+			$this->assertEquals($result->errors[0], "Card number is invalid");
 		}
 
 		/**
@@ -108,11 +108,11 @@
 		public function test_invalid_refund() {
 			$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 	        $gw->timeout = 30;
-      
+
       $result = $gw->refund("12345", 100.00, "ERRORTEST");
 
 			$this->assertFalse($result->successful);
-			$this->assertEquals($result->errors[0], "Original transaction is required");
+			$this->assertEquals($result->errors[0], "Original transaction could not be found");
 		}
 
 		/**
@@ -127,7 +127,7 @@
 
 			$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
 			$fetch_result = $gw->get_refund($refund_result->response->id);
-			
+
 			$this->assertTrue($fetch_result->successful);
 			$this->assertTrue($fetch_result->response->successful);
 		}
@@ -189,7 +189,7 @@
 			$this->assertTrue($result->successful);
 			$this->assertTrue($result->response->successful);
 			$this->assertEquals($result->response->message, "Approved");
-		}		
+		}
 
 		/**
 		* Test a token purchase with an invalid token
@@ -202,7 +202,7 @@
 
 			$this->assertFalse($result->successful);
 			$this->assertEquals($result->errors[0], "Card TOK123 could not be found");
-		}		
+		}
 
 		/**
 		* Test creating a customer
@@ -218,7 +218,7 @@
 
 			$this->assertTrue($result->successful);
 			$this->assertNotNull($result->response->id);
-		}		
+		}
 
 		/**
 		* Test creating a subscription
@@ -270,7 +270,7 @@
 			$this->assertTrue($result->successful);
 			$this->assertNotNull($result->response->id);
 			$this->assertFalse($result->response->is_active);
-			
+
 		}
 
 		/**
@@ -298,8 +298,8 @@
 			$this->assertTrue($result->successful);
 			$this->assertNotNull($result->response->id);
 			$this->assertTrue($result->response->is_active);
-			
-			
+
+
 		}
 
 		/**
