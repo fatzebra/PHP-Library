@@ -31,7 +31,7 @@
 		/**
 		* The version of this library
 		*/
-		public $version = "1.1.5";
+		public $version = "1.1.6";
 
 		/**
 		* The URL of the Fat Zebra gateway
@@ -371,6 +371,7 @@
 
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($curl, CURLOPT_SSLVERSION, 6); // CURLOPT_SSLVERSION_TLSv1_2
 			curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . DIRECTORY_SEPARATOR . 'ca-bundle.crt');
 			curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
 
