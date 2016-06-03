@@ -244,6 +244,7 @@
 					"card_holder" => $card_holder,
 					"card_number" => $card_number,
 					"expiry_date" => $card_expiry,
+					"cvv" => $cvv
 					));
 
 			return $this->do_request("POST", "/customers", $payload);
