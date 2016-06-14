@@ -1,7 +1,7 @@
 PHP API Library for Fat Zebra
 ==============================
 
-Release 1.1.0 for API version 1.0
+Release 1.1.7 for API version 1.0
 
 A PHP library for the [Fat Zebra](https://www.fatzebra.com.au) Online Payment Gateway (for Australian Merchants)
 Now supports recurring billing (subscriptions, plans, customers)
@@ -36,7 +36,7 @@ Usage
 
   try {
   	$gateway = new FatZebra\Gateway(USERNAME, TOKEN, TEST_MODE);
-  	$purchase_request = new FatZebra\PurchaseRequest($_POST['amount'], $_POST['reference'], $_POST['name'], $_POST['card_number'], $_POST['card_expiry_month'] ."/". $_POST['card_expiry_year'], $_POST['card_cvv']);
+  	$purchase_request = new FatZebra\PurchaseRequest($_POST['amount'], $_POST['reference'], $_POST['name'], $_POST['card_number'], $_POST['card_expiry_month'] ."/". $_POST['card_expiry_year'], $_POST['card_cvv'], null, 'AUD');
 
   	$response = $gateway->purchase($purchase_request);
 
@@ -62,7 +62,7 @@ Usage
 
   try {
     $gateway = new FatZebra\Gateway(USERNAME, TOKEN, TEST_MODE);
-    $response = $gateway->token_purchase($_POST['token'], $amount, $reference);
+    $response = $gateway->token_purchase($_POST['token'], $amount, $reference, null, 'AUD');
 
     $_SESSION['response'] = $response;
     header("Location: index.php");

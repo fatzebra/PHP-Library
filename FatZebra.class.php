@@ -1,15 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
-	* Version 1.1.5
-	*
-	* Created February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
-	* Updated 20 February 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
-	* Updated 19 April 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
-	*  - Added refund support
-	*  - Added tokenization support
-	* Updated 10 July 2012 - Matthew Savage (matthew.savage@fatzebra.com.au)
-	*  - Added support for Plans, Customers and Subscriptions
+	* Version 1.1.7
 	*
 	* The original source for this library, including its tests can be found at
 	* https://github.com/fatzebra/PHP-Library
@@ -31,7 +23,7 @@
 		/**
 		* The version of this library
 		*/
-		public $version = "1.1.6";
+		public $version = "1.1.7";
 
 		/**
 		* The URL of the Fat Zebra gateway
@@ -114,9 +106,10 @@
 		* @param float $amount the purchase amount
 		* @param string $reference the purchase reference
 		* @param string $cvv the card verification value - optional but recommended
+		* @param string $currency the currency code for the transaction. Defaults to AUD
 		* @return \StdObject
 		*/
-		public function token_purchase($token, $amount, $reference, $cvv = null) {
+		public function token_purchase($token, $amount, $reference, $cvv = null, $currency = "AUD") {
 			$customer_ip = $this->get_customer_ip();
 
 			if (function_exists('bcmul')) {
@@ -130,7 +123,8 @@
 				"card_token" => $token,
 				"cvv" => $cvv,
 				"amount" => $int_amount,
-				"reference" => $reference
+				"reference" => $reference,
+				"currency" => $currency
 				);
 			return $this->do_request("POST", "/purchases", $payload);
 		}
@@ -401,7 +395,7 @@
 
 		/**
 		* Fetches the customers 'real' IP address (i.e. pulls out the address from X-Forwarded-For if present)
-		* 
+		*
 		* @return String the customers IP address
 		*/
 		private function get_customer_ip() {
@@ -456,6 +450,11 @@
 		private $fraud_data = null;
 
 		/**
+		* Currency code for transaction
+		*/
+		private $currency = "AUD";
+
+		/**
 		* Creates a new instance of the PurchaseRequest
 		* @param float $amount the purchase amount
 		* @param string $reference the reference for the purchase
@@ -465,7 +464,7 @@
 		* @param string $cvv the card verification value
 		* @return PurchaseRequest
 		*/
-		public function __construct($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null) {
+		public function __construct($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null, $currency = "AUD") {
 			if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
 			if((float)$amount < 0) throw new \InvalidArgumentException("Amount is invalid.");
 			$this->amount = $amount;
@@ -494,20 +493,16 @@
 		* @return \Array
 		*/
 		public function to_array() {
-			if (function_exists('bcmul')) {
-				$int_amount = intval(bcmul($this->amount, 100));
-			} else {
-				$multiplied = round($amount * 100);
-				$int_amount = (int)$multiplied;
-			}
-			
+			$int_amount = Helpers::floatToInt($this->amount);
+
 			$data = array(
 				"card_holder" => $this->card_holder,
 				"card_number" => $this->card_number,
 				"card_expiry" => $this->expiry,
 				"cvv" => $this->cvv,
 				"reference" => $this->reference,
-				"amount" => $int_amount
+				"amount" => $int_amount,
+				"currency" => $this->currency
 			);
 			if (!is_null($this->fraud_data)) {
 				$data['fraud'] = $this->fraud_data;
