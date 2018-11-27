@@ -226,12 +226,12 @@ class Gateway {
      * Performs an authorization against the FatZebra gateway with a tokenized credit card
      * @param float $amount the purchase amount
      * @param string $reference the purchase reference
-     * @param string $card_token the card token or alias for the authorization
+     * @param string $token the card token or alias for the authorization
      * @param string $currency the currency code for the transaction. Defaults to AUD
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
      * @return \StdObject
      */
-    public function token_authorization($amount, $reference, $card_token, $currency = "AUD", $extra = null) {
+    public function token_authorization($amount, $reference, $token, $currency = "AUD", $extra = null) {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
         if(is_null($reference)) throw new \InvalidArgumentException("Reference is a required field.");
         if(strlen($reference) === 0) throw new \InvalidArgumentException("Reference is a required field.");
@@ -243,10 +243,10 @@ class Gateway {
 
         $payload = array(
             'customer_ip' => $customer_ip,
-            'card_token' => $card_token,
-            'reference' => $this->reference,
+            'card_token' => $token,
+            'reference' => $reference,
             'amount' => $int_amount,
-            'currency' => $this->currency,
+            'currency' => $currency,
             'capture' => false
         );
 
