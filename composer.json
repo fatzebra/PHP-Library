@@ -1,6 +1,7 @@
 {
 	"name": "fatzebra/fatzebra-php",
 	"version": "1.2.2",
+	"license": "GPL-2.0-or-later",
 	"repositories": [
 		{
 			"type": "vcs",
