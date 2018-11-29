@@ -69,6 +69,11 @@ class Gateway {
     private $ca = "";
 
     /**
+     * Customer real IP to send.
+     */
+    private $customer_ip;
+
+    /**
      * Creates a new instance of the Fat Zebra gateway object
      * @param string $username the username for the gateway
      * @param string $token the token for the gateway
@@ -479,18 +484,29 @@ class Gateway {
     }
 
     /**
-     * Fetches the customers 'real' IP address (i.e. pulls out the address from X-Forwarded-For if present)
+     * Get the currently set customer ip or fetches the customers 'real' IP
+     * address (i.e. pulls out the address from X-Forwarded-For if present)
      *
      * @return String the customers IP address
      */
     private function get_customer_ip() {
-        $customer_ip = $_SERVER['REMOTE_ADDR'];
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $customer_ip = $forwarded_ips[0];
+        if (!$this->customer_ip) {
+            $this->customer_ip = $_SERVER['REMOTE_ADDR'];
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $this->customer_ip = $forwarded_ips[0];
+            }
         }
+        return $this->customer_ip;
+    }
 
-        return $customer_ip;
+    /**
+     * Allows explicitly setting the customer's IP address to be sent along with some requests.
+     *
+     * @return String the customers IP address
+     */
+    public function set_customer_ip($customer_ip) {
+        $this->customer_ip = $customer_ip;
     }
 
     /**
