@@ -69,6 +69,11 @@ class Gateway {
     private $ca = "";
 
     /**
+     * Customer real IP to send.
+     */
+    private $customer_ip;
+
+    /**
      * Creates a new instance of the Fat Zebra gateway object
      * @param string $username the username for the gateway
      * @param string $token the token for the gateway
@@ -226,12 +231,12 @@ class Gateway {
      * Performs an authorization against the FatZebra gateway with a tokenized credit card
      * @param float $amount the purchase amount
      * @param string $reference the purchase reference
-     * @param string $card_token the card token or alias for the authorization
+     * @param string $token the card token or alias for the authorization
      * @param string $currency the currency code for the transaction. Defaults to AUD
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
      * @return \StdObject
      */
-    public function token_authorization($amount, $reference, $card_token, $currency = "AUD", $extra = null) {
+    public function token_authorization($amount, $reference, $token, $currency = "AUD", $extra = null) {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
         if(is_null($reference)) throw new \InvalidArgumentException("Reference is a required field.");
         if(strlen($reference) === 0) throw new \InvalidArgumentException("Reference is a required field.");
@@ -243,10 +248,10 @@ class Gateway {
 
         $payload = array(
             'customer_ip' => $customer_ip,
-            'card_token' => $card_token,
-            'reference' => $this->reference,
+            'card_token' => $token,
+            'reference' => $reference,
             'amount' => $int_amount,
-            'currency' => $this->currency,
+            'currency' => $currency,
             'capture' => false
         );
 
@@ -479,18 +484,29 @@ class Gateway {
     }
 
     /**
-     * Fetches the customers 'real' IP address (i.e. pulls out the address from X-Forwarded-For if present)
+     * Get the currently set customer ip or fetches the customers 'real' IP
+     * address (i.e. pulls out the address from X-Forwarded-For if present)
      *
      * @return String the customers IP address
      */
     private function get_customer_ip() {
-        $customer_ip = $_SERVER['REMOTE_ADDR'];
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $customer_ip = $forwarded_ips[0];
+        if (!$this->customer_ip) {
+            $this->customer_ip = $_SERVER['REMOTE_ADDR'];
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $this->customer_ip = $forwarded_ips[0];
+            }
         }
+        return $this->customer_ip;
+    }
 
-        return $customer_ip;
+    /**
+     * Allows explicitly setting the customer's IP address to be sent along with some requests.
+     *
+     * @return String the customers IP address
+     */
+    public function set_customer_ip($customer_ip) {
+        $this->customer_ip = $customer_ip;
     }
 
     /**

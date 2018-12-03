@@ -76,6 +76,13 @@ Usage
 
 See the example folder for this example tied into a website.
 
+Example
+-------
+
+From within the `example` directory you can run `docker-compose up -d` and `docker-compose down` to start and stop (respectively) an apache web server running the php example.
+
+Once up, you can access the example website at http://localhost:8080/example/index.php URL to give it a go.
+
 Documentation
 -------------
 
