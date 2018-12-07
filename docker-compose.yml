@@ -1,0 +1,15 @@
+version: '2.3'
+
+services:
+
+    tests:
+        build:
+          context: .
+          target: final
+
+    example:
+        build:
+          context: .
+          target: web
+        ports:
+            - 8080:80
