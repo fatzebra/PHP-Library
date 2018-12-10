@@ -179,6 +179,86 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Testing fetching a previously tokenized card
+	 */
+	public function test_get_tokenized_card() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$card_holder = "Joe Bloggs";
+		$card_number = "5123456789012346";
+		$expected_card_number = "512345XXXXXX2346";
+
+		$expiry_date = "05/2023";
+		$expected_expiry_date = "2023-05-31";
+
+		$result = $gw->tokenize($card_holder, $card_number, $expiry_date, "123");
+
+		$this->assertTrue($result->successful);
+		$this->assertNotNull($result->response->token);
+
+		$token = $result->response->token;
+		$result = $gw->get_tokenized_card($token);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->card_holder, $card_holder);
+		$this->assertEquals($result->response->card_number, $expected_card_number);
+		$this->assertEquals($result->response->card_expiry, $expected_expiry_date);
+	}
+
+	/**
+	 * Testing fail fetching a previously tokenized card using invalid token
+	 */
+	public function test_failed_get_tokenized_card() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$result = $gw->get_tokenized_card("invalid token");
+
+		$this->assertFalse($result->successful);
+		$this->assertEquals($result->errors[0], "Record not found");
+	}
+
+	/**
+	 * Testing updating a previously tokenized card
+	 */
+	public function test_update_tokenized_card() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$card_holder = "Joanne Bloggs";
+		$card_number = "5123456789012346";
+		$expiry_date = "05/2024";
+		$expected_expiry_date = "2024-05-31";
+
+		$result = $gw->tokenize($card_holder, $card_number, $expiry_date, "123");
+
+		$this->assertTrue($result->successful);
+		$this->assertNotNull($result->response->token);
+
+		$token = $result->response->token;
+		$result = $gw->get_tokenized_card($token);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->card_expiry, $expected_expiry_date);
+
+		$alias = "fz_test";
+		$new_expiry_date = "11/2025";
+		$expected_new_expiry_date = "2025-11-30";
+
+		$result = $gw->update_tokenized_card($token, $new_expiry_date, $alias);
+
+		$this->assertTrue($result->successful);
+
+		$token = $result->response->token;
+		$result = $gw->get_tokenized_card($token);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->card_expiry, $expected_new_expiry_date);
+		$this->assertEquals($result->response->alias, $alias);
+	}
+
+	/**
 	 * Testing a token purchase
 	 */
 	public function test_purchase_with_token() {
