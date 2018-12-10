@@ -1,0 +1,19 @@
+version: '2.3'
+
+services:
+
+    example:
+        build:
+          context: .
+          target: web
+          args:
+            - "WEB_PHP_VERSION=${PHP_VERSION:-7}-apache"
+        ports:
+            - '8080:80'
+
+    tests:
+        build:
+          context: .
+          target: final
+          args:
+            - "TEST_PHP_VERSION=${PHP_VERSION:-7}-cli"

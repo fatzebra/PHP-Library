@@ -1,8 +1,14 @@
 language: php
+
 php:
   - 5.4
   - 5.6
   - 7.0
   - 7.1
   - 7.2
-script: phpunit test/*.php
+  - 7.3
+
+install:
+  - composer config --global github-protocols https
+  - composer install --prefer-dist --no-interaction
+script: vendor/bin/phpunit

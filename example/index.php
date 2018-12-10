@@ -48,7 +48,7 @@
         <input type="text" name="name" id="name" />
         
         <label for="card_number">Card Number</label>
-        <input type="text" name="card_number" id="card_number" autocomplete="off" />
+        <input type="text" name="card_number" id="card_number" autocomplete="off" value="5123456789012346" />
         
         <label for="card_expiry_month">Expiry</label>
         <input type="text" name="card_expiry_month" id="card_expiry_month" class="span1" />
