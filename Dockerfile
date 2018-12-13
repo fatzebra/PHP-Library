@@ -4,7 +4,7 @@ FROM "php:$TEST_PHP_VERSION" AS deps
 
 # Install git and some deps
 RUN apt-get update \
- && apt-get install -y git unzip zlib1g zlib1g-dev
+ && apt-get install -y git unzip zlib1g zlib1g-dev libzip-dev
 
 # Install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \

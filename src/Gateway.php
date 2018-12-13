@@ -4,6 +4,8 @@
  */
 namespace FatZebra;
 
+use \InvalidArgumentException;
+
 /**
  * The Fat Zebra Gateway class for interfacing with Fat Zebra
  */
@@ -11,7 +13,7 @@ class Gateway {
     /**
      * The version of this library
      */
-    private $version = '2.0.0';
+    private $version = '2.1.0';
 
     /**
      * The URL of the Fat Zebra gateway
@@ -64,10 +66,10 @@ class Gateway {
      * @return Gateway
      */
     public function __construct($username, $token, $test_mode = true, $gateway_url = null) {
-        if (is_null($username) || strlen($username) === 0) throw new \InvalidArgumentException('Username is required');
+        if (is_null($username) || strlen($username) === 0) throw new InvalidArgumentException('Username is required');
         $this->username = $username;
 
-        if (is_null($token) || strlen($token) === 0) throw new \InvalidArgumentException('Token is required');
+        if (is_null($token) || strlen($token) === 0) throw new InvalidArgumentException('Token is required');
         $this->token = $token;
 
         $this->test_mode = $test_mode;
@@ -102,13 +104,13 @@ class Gateway {
     public function purchase($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null, $currency = 'AUD', $extra = null) {
         $customer_ip = $this->get_customer_ip();
 
-        if(is_null($amount)) throw new \InvalidArgumentException('Amount is a required field.');
-        if(is_null($reference)) throw new \InvalidArgumentException('Reference is a required field.');
-        if(strlen($reference) === 0) throw new \InvalidArgumentException('Reference is a required field.');
-        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException('Card Holder is a required field.');
-        if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException('Card Number is a required field.');
-        if(is_null($expiry)) throw new \InvalidArgumentException('Expiry is a required field.');
-        if(is_null($cvv)) throw new \InvalidArgumentException('CVV is a required field.');
+        if(is_null($amount)) throw new InvalidArgumentException('Amount is a required field.');
+        if(is_null($reference)) throw new InvalidArgumentException('Reference is a required field.');
+        if(strlen($reference) === 0) throw new InvalidArgumentException('Reference is a required field.');
+        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new InvalidArgumentException('Card Holder is a required field.');
+        if(is_null($card_number) || (strlen($card_number) === 0)) throw new InvalidArgumentException('Card Number is a required field.');
+        if(is_null($expiry)) throw new InvalidArgumentException('Expiry is a required field.');
+        if(is_null($cvv)) throw new InvalidArgumentException('CVV is a required field.');
 
         $int_amount = self::floatToInt($amount);
 
@@ -144,10 +146,10 @@ class Gateway {
      * @return \StdObject
      */
     public function token_purchase($token, $amount, $reference, $cvv = null, $currency = 'AUD') {
-        if(is_null($amount)) throw new \InvalidArgumentException('Amount is a required field.');
-        if(is_null($reference)) throw new \InvalidArgumentException('Reference is a required field.');
-        if(strlen($reference) === 0) throw new \InvalidArgumentException('Reference is a required field.');
-        if(is_null($token) || (strlen($token) === 0)) throw new \InvalidArgumentException('Card token is a required field.');
+        if(is_null($amount)) throw new InvalidArgumentException('Amount is a required field.');
+        if(is_null($reference)) throw new InvalidArgumentException('Reference is a required field.');
+        if(strlen($reference) === 0) throw new InvalidArgumentException('Reference is a required field.');
+        if(is_null($token) || (strlen($token) === 0)) throw new InvalidArgumentException('Card token is a required field.');
 
         $customer_ip = $this->get_customer_ip();
 
@@ -176,13 +178,13 @@ class Gateway {
      * @return \StdObject
      */
     public function authorization($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $currency = 'AUD', $extra = null) {
-        if(is_null($amount)) throw new \InvalidArgumentException('Amount is a required field.');
-        if(is_null($reference)) throw new \InvalidArgumentException('Reference is a required field.');
-        if(strlen($reference) === 0) throw new \InvalidArgumentException('Reference is a required field.');
-        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException('Card Holder is a required field.');
-        if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException('Card Number is a required field.');
-        if(is_null($expiry)) throw new \InvalidArgumentException('Expiry is a required field.');
-        if(is_null($cvv)) throw new \InvalidArgumentException('CVV is a required field.');
+        if(is_null($amount)) throw new InvalidArgumentException('Amount is a required field.');
+        if(is_null($reference)) throw new InvalidArgumentException('Reference is a required field.');
+        if(strlen($reference) === 0) throw new InvalidArgumentException('Reference is a required field.');
+        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new InvalidArgumentException('Card Holder is a required field.');
+        if(is_null($card_number) || (strlen($card_number) === 0)) throw new InvalidArgumentException('Card Number is a required field.');
+        if(is_null($expiry)) throw new InvalidArgumentException('Expiry is a required field.');
+        if(is_null($cvv)) throw new InvalidArgumentException('CVV is a required field.');
 
         $customer_ip = $this->get_customer_ip();
 
@@ -217,10 +219,10 @@ class Gateway {
      * @return \StdObject
      */
     public function token_authorization($amount, $reference, $token, $currency = 'AUD', $extra = null) {
-        if(is_null($amount)) throw new \InvalidArgumentException('Amount is a required field.');
-        if(is_null($reference)) throw new \InvalidArgumentException('Reference is a required field.');
-        if(strlen($reference) === 0) throw new \InvalidArgumentException('Reference is a required field.');
-        if(is_null($token) || (strlen($token) === 0)) throw new \InvalidArgumentException('Card token is a required field.');
+        if(is_null($amount)) throw new InvalidArgumentException('Amount is a required field.');
+        if(is_null($reference)) throw new InvalidArgumentException('Reference is a required field.');
+        if(strlen($reference) === 0) throw new InvalidArgumentException('Reference is a required field.');
+        if(is_null($token) || (strlen($token) === 0)) throw new InvalidArgumentException('Card token is a required field.');
 
         $customer_ip = $this->get_customer_ip();
 
@@ -251,8 +253,8 @@ class Gateway {
      * @return \StdObject
      */
     public function capture($transaction_id, $amount, $extra = null) {
-        if(is_null($amount)) throw new \InvalidArgumentException('Amount is a required field.');
-        if(is_null($transaction_id)) throw new \InvalidArgumentException('Transaction ID is a required field.');
+        if(is_null($amount)) throw new InvalidArgumentException('Amount is a required field.');
+        if(is_null($transaction_id)) throw new InvalidArgumentException('Transaction ID is a required field.');
 
         $int_amount = self::floatToInt($amount);
 
@@ -290,10 +292,10 @@ class Gateway {
      * @return \StdObject
      */
     public function refund($transaction_id, $amount, $reference, $extra = null) {
-        if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException('Transaction ID is required');
-        if(is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException('Amount is required');
-        if(intval($amount) < 1) throw new \InvalidArgumentException('Amount is invalid - must be a positive value');
-        if(is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException('Reference is required');
+        if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new InvalidArgumentException('Transaction ID is required');
+        if(is_null($amount) || strlen($amount) === 0) throw new InvalidArgumentException('Amount is required');
+        if(intval($amount) < 1) throw new InvalidArgumentException('Amount is invalid - must be a positive value');
+        if(is_null($reference) || strlen($reference) === 0) throw new InvalidArgumentException('Reference is required');
 
         $int_amount = self::floatToInt($amount);
 
@@ -316,9 +318,9 @@ class Gateway {
      * @param string $reference the purchase ID
      * @return \StdObject
      */
-    public function get_purchase($reference) {
-        if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException('Reference is required');
-        return $this->do_request('GET', '/purchases/' . $reference);
+    public function get_purchase($id) {
+        if (is_null($id) || strlen($id) === 0) throw new InvalidArgumentException('id is required');
+        return $this->do_request('GET', '/purchases/' . $id);
     }
 
     /**
@@ -326,9 +328,9 @@ class Gateway {
      * @param string $reference the refund ID
      * @return \StdObject
      */
-    public function get_refund($reference) {
-        if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException('Reference is required');
-        return $this->do_request('GET', '/refunds/' . $reference);
+    public function get_refund($id) {
+        if (is_null($id) || strlen($id) === 0) throw new InvalidArgumentException('id is required');
+        return $this->do_request('GET', '/refunds/' . $id);
     }
 
     /**
@@ -340,11 +342,10 @@ class Gateway {
      * @return \StdObject
      */
     public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
-        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException('Card Holder is a required field.');
-        if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException('Card Number is a required field.');
-        if(is_null($expiry_date)) throw new \InvalidArgumentException('Expiry is a required field.');
-        if(is_null($cvv)) throw new \InvalidArgumentException('CVV is a required field.');
-
+        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new InvalidArgumentException('Card Holder is a required field.');
+        if(is_null($card_number) || (strlen($card_number) === 0)) throw new InvalidArgumentException('Card Number is a required field.');
+        if(is_null($expiry_date)) throw new InvalidArgumentException('Expiry is a required field.');
+        if(is_null($cvv)) throw new InvalidArgumentException('CVV is a required field.');
 
         $customer_ip = $this->get_customer_ip();
 
@@ -359,6 +360,39 @@ class Gateway {
     }
 
     /**
+     * Fetch the details of a previously tokenized credit card
+     * @param string $token the card token
+     * @return \StdObject
+     */
+    public function get_tokenized_card($token) {
+        if(is_null($token) || (strlen($token) === 0)) throw new InvalidArgumentException('Token is a required field.');
+        return $this->do_request('GET', '/credit_cards/'.$token);
+    }
+
+	/**
+	 * Update a tokenized card
+	 * @param string $token the card token
+	 * @param string $expiry_date the card expiry date (mm/yyyy format)
+	 * @param string $alias alias to associate with the card
+	 * @return \StdObject
+	 */
+    public function update_tokenized_card($token, $expiry_date=null, $alias=null) {
+		if(is_null($token) || (strlen($token) === 0)) throw new InvalidArgumentException('Token is a required field.');
+
+		$payload = [];
+
+		if (!is_null($expiry_date)) {
+			$payload['card_expiry'] = $expiry_date;
+		}
+
+		if (!is_null($alias)) {
+			$payload['alias'] = $alias;
+		}
+
+		return $this->do_request('PUT', '/credit_cards/'.$token, $payload);
+	}
+
+    /**
      * Create a new customer for recurring subscriptions
      * @param string $first_name the customers first name
      * @param string $last_name the customers last name
@@ -371,15 +405,15 @@ class Gateway {
      * @return \StdObject
      */
     public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv) {
-        if(is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException('First name is a required field.');
-        if(is_null($last_name) || (strlen($last_name) === 0)) throw new \InvalidArgumentException('Last name is a required field.');
-        if(is_null($email) || (strlen($email) === 0)) throw new \InvalidArgumentException('Email is a required field.');
-        if(is_null($reference) || (strlen($reference) === 0)) throw new \InvalidArgumentException('Reference is a required field.');
+        if(is_null($first_name) || (strlen($first_name) === 0)) throw new InvalidArgumentException('First name is a required field.');
+        if(is_null($last_name) || (strlen($last_name) === 0)) throw new InvalidArgumentException('Last name is a required field.');
+        if(is_null($email) || (strlen($email) === 0)) throw new InvalidArgumentException('Email is a required field.');
+        if(is_null($reference) || (strlen($reference) === 0)) throw new InvalidArgumentException('Reference is a required field.');
 
-        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException('Card Holder is a required field.');
-        if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException('Card Number is a required field.');
-        if(is_null($card_expiry)) throw new \InvalidArgumentException('Expiry is a required field.');
-        if(is_null($cvv)) throw new \InvalidArgumentException('CVV is a required field.');
+        if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new InvalidArgumentException('Card Holder is a required field.');
+        if(is_null($card_number) || (strlen($card_number) === 0)) throw new InvalidArgumentException('Card Number is a required field.');
+        if(is_null($card_expiry)) throw new InvalidArgumentException('Expiry is a required field.');
+        if(is_null($cvv)) throw new InvalidArgumentException('CVV is a required field.');
 
         $payload = [
             'first_name' => $first_name,
