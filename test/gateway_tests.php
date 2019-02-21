@@ -125,6 +125,21 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Test a partial refund of amount less than 1.
+	 */
+	public function test_refund_amount_less_than_one() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+		$gw->timeout = 30;
+
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+
+		$refund_result = $gw->refund($result->response->id, 0.50, "UNITTEST" . rand());
+
+		$this->assertTrue($result->successful);
+		$this->assertTrue($result->response->successful);
+	}
+
+	/**
 	 * Test refunding with an invalid transaction ID
 	 */
 	public function test_invalid_refund() {
