@@ -420,7 +420,7 @@ class Gateway {
      * @param Array $payload the request payload (if a POST request)
      * @return \StdObject
      */
-    private function do_request($method, $uri, $payload = null) {
+    protected function do_request($method, $uri, $payload = null) {
         $curl = curl_init();
         if(is_null($this->api_version)) {
             $url = $this->url . $uri;
