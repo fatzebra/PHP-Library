@@ -115,10 +115,6 @@ class Gateway {
      * @return \StdObject
      */
     public function purchase($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null, $currency = "AUD", $extra = null) {
-        if (!is_null($extra) && !is_null($extra['wallet']) && !empty($extra['wallet'])) {
-            return $this->wallet_purchase($amount, $reference, $extra['wallet'], $currency);
-        }
-
         $customer_ip = $this->get_customer_ip();
 
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
