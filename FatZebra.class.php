@@ -179,6 +179,31 @@ class Gateway {
     }
 
     /**
+     * Performs a purchase against the FatZebra gateway with a wallet
+     * @param float $amount the purchase amount
+     * @param string $reference the purchase reference
+     * @param string $currency the currency code for the transaction. Defaults to AUD
+     * @param array<string,string> $wallet an assoc. array of wallet params to merge into the request
+     * @return \StdObject
+     */
+    public function wallet_purchase($amount, $reference, $wallet, $currency = "AUD") {
+        if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
+        if(is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is a required field.");
+        if(is_null($wallet) || !is_array($wallet) || empty($wallet)) throw new \InvalidArgumentException("Wallet is a required field.");
+
+        $customer_ip = $this->get_customer_ip();
+        $int_amount = self::floatToInt($amount);
+        $payload = array(
+            "amount" => $int_amount,
+            "reference" => $reference,
+            "customer_ip" => $customer_ip,
+            "currency" => $currency,
+            "wallet" => $wallet,
+        );
+        return $this->do_request("POST", "/purchases", $payload);
+    }
+
+    /**
      * Performs an authorization against the FatZebra gateway with credit card details
      * @param float $amount the purchase amount
      * @param string $reference the purchase reference
