@@ -27,6 +27,79 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Test a valid wallet purchase
+	 */
+	public function test_valid_transaction_with_extra_wallet() {
+		$wallet = array(
+			"type" => "APPLE",
+			"token" => array(
+				"paymentData" => array(
+					 "data" => "value",
+					 "signature" => "value",
+					 "header" => "value",
+					 "version" => "value",
+				)
+			)
+		);
+		$extra = array("wallet" => $wallet);
+
+		$stubbed_response = '{"successful":true,"response":{"successful":true,"message":"Approved"},"errors":[],"test":true}';
+		$stub = $this->createMock(FatZebra\Gateway::class);
+		$stub->method('purchase')->willReturn(json_decode($stubbed_response));
+		$result = $stub->purchase(100.00, "UNITTEST" . rand(), "", "", "", null, null, "AUD", $extra);
+
+		$this->assertTrue($result->successful);
+		$this->assertTrue($result->response->successful);
+		$this->assertEquals($result->response->message, "Approved");
+	}
+
+	/**
+	 * Test a valid wallet purchase
+	 */
+	public function test_valid_wallet_transaction() {
+		$wallet = array(
+			"type" => "APPLE",
+			"token" => array(
+				"paymentData" => array(
+					 "data" => "value",
+					 "signature" => "value",
+					 "header" => "value",
+					 "version" => "value",
+				)
+			)
+		);
+
+		$stubbed_response = '{"successful":true,"response":{"successful":true,"message":"Approved"},"errors":[],"test":true}';
+		$stub = $this->createMock(FatZebra\Gateway::class);
+		$stub->method('wallet_purchase')->willReturn(json_decode($stubbed_response));
+		$result = $stub->wallet_purchase(100.00, "UNITTEST" . rand(), $wallet, "AUD");
+
+		$this->assertTrue($result->successful);
+		$this->assertTrue($result->response->successful);
+		$this->assertEquals($result->response->message, "Approved");
+	}
+
+	/**
+	 * Test an invalid wallet purchase
+	 */
+	public function test_invalid_wallet_transaction() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+		$gw->timeout = 30;
+		$wallet = array(
+			"type" => "APPLE",
+			"token" => array(
+				"paymentData" => array(
+					 "data" => "INVALID"
+				)
+			)
+		);
+
+		$result = $gw->wallet_purchase(100.00, "UNITTEST" . rand(), $wallet, "AUD");
+		$this->assertFalse($result->successful);
+		$this->assertEquals($result->errors[0], "Unable to load credit card data from Wallet details");
+	}
+
+	/**
 	 * Test a declining purchase
 	 */
 	public function test_failing_transaction() {
