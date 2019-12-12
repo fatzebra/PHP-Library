@@ -313,6 +313,22 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 		$this->assertTrue($result->successful);
 		$this->assertNotNull($result->response->id);
 	}
+
+	/**
+	 * Testing a token authorization
+	 */
+	public function test_token_authorization() {
+	 $gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+	 $gw->timeout = 30;
+
+	 $card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", "123");
+
+	 $result = $gw->token_authorization(100.00, "UNITTEST" . rand(), $card->response->token);
+
+	 $this->assertTrue($result->successful);
+	 $this->assertTrue($result->response->successful);
+	 $this->assertEquals($result->response->message, "Approved");
+	}
 }
 
 ?>
