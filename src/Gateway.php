@@ -333,6 +333,35 @@ class Gateway {
         return $this->do_request('GET', '/refunds/' . $id);
     }
 
+	/**
+	 * Created a new direct debit
+	 * @param string $bsb
+	 * @param string $account_name
+	 * @param string $account_number
+	 * @param float $amount
+	 * @param string $description
+	 * @return \StdObject
+	 * @throws TimeoutException
+	 */
+	public function direct_debit(string $bsb,string $account_name,string $account_number,float $amount,string $description) {
+		if(is_null($bsb) || (strlen($bsb) === 0)) throw new InvalidArgumentException('BSB is a required field.');
+		if(is_null($account_name) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Name is a required field.');
+		if(is_null($account_number) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Number is a required field.');
+		if(is_null($amount) || ($amount === 0)) throw new InvalidArgumentException('Amount is a required field.');
+		if(is_null($description) || (strlen($description) === 0)) throw new InvalidArgumentException('Description is a required field.');
+		$customer_ip = $this->get_customer_ip();
+
+		$payload = [
+			'customer_ip' => $customer_ip,
+			'description'=> $description,
+			'amount'=> $amount,
+			'bsb'=> $bsb,
+			'account_name'=> $account_name,
+			'account_number'=>$account_number
+		];
+		return $this->do_request('POST', '/direct_debits', $payload);
+	}
+
     /**
      * Created a new tokenized credit card
      * @param string $card_holder the card holders name

@@ -8,7 +8,7 @@ use FatZebra\Gateway;
 
 class GatewayTests extends PHPUnit\Framework\TestCase {
 
-	protected function setUp() {
+	protected function setUp(): void {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
@@ -149,6 +149,23 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 
 		$this->assertTrue($fetch_result->successful);
 		$this->assertTrue($fetch_result->response->successful);
+	}
+
+	/**
+	 * Test create a direct debit
+	 */
+	public function test_direct_debit() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$result = $gw->direct_debit("123-123","Billy Blanks", "012345678", "7", "test deposit");
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->bsb, "123-123");
+		$this->assertEquals($result->response->account_name, "Billy Blanks");
+		$this->assertEquals($result->response->account_number, "012345678");
+		$this->assertEquals($result->response->amount, "7.0");
+		$this->assertEquals($result->response->description, "test deposit");
 	}
 
 	/**
