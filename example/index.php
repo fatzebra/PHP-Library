@@ -46,7 +46,7 @@
     <div class="clear"></div>
     <div class="well">
         <a href="create_direct_debit.php" type="submit" class="btn-large btn-primary">
-            Create Direct Debit
+            Create Direct Debit and Fetch Direct Debit
         </a>
         <hr>
         <a href="tokenize_credit_card.php" type="submit" class="btn-large btn-primary">

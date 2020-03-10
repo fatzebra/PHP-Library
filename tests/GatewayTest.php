@@ -158,9 +158,33 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 		$gw = new FatZebra\Gateway("TEST", "TEST", true);
 		$gw->set_timeout(30);
 
-		$result = $gw->direct_debit("123-123","Billy Blanks", "012345678", "7", "test deposit");
+		$result = $gw->create_direct_debit("123-123","Billy Blanks", "012345678", "7", "test deposit");
 
 		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->bsb, "123-123");
+		$this->assertEquals($result->response->account_name, "Billy Blanks");
+		$this->assertEquals($result->response->account_number, "012345678");
+		$this->assertEquals($result->response->amount, "7.0");
+		$this->assertEquals($result->response->description, "test deposit");
+	}
+
+	/**
+	 * Test create a direct debit
+	 */
+	public function test_get_direct_debit() {
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$result = $gw->create_direct_debit("123-123","Billy Blanks", "012345678", "7", "test deposit");
+
+		$this->assertTrue($result->successful);
+
+		$expected_id = $result->response->id;
+
+		$result = $gw->get_direct_debit($expected_id);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->id, $expected_id);
 		$this->assertEquals($result->response->bsb, "123-123");
 		$this->assertEquals($result->response->account_name, "Billy Blanks");
 		$this->assertEquals($result->response->account_number, "012345678");

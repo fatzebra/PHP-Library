@@ -343,7 +343,7 @@ class Gateway {
 	 * @return \StdObject
 	 * @throws TimeoutException
 	 */
-	public function direct_debit(string $bsb,string $account_name,string $account_number,float $amount,string $description) {
+	public function create_direct_debit(string $bsb, string $account_name, string $account_number, float $amount, string $description) {
 		if(is_null($bsb) || (strlen($bsb) === 0)) throw new InvalidArgumentException('BSB is a required field.');
 		if(is_null($account_name) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Name is a required field.');
 		if(is_null($account_number) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Number is a required field.');
@@ -362,7 +362,18 @@ class Gateway {
 		return $this->do_request('POST', '/direct_debits', $payload);
 	}
 
-    /**
+	/**
+	 * Get a direct debit
+	 * @param $id
+	 * @return \StdObject
+	 * @throws TimeoutException
+	 */
+	public function get_direct_debit($id) {
+		if(is_null($id) || (strlen($id) === 0)) throw new InvalidArgumentException('ID is a required field.');
+		return $this->do_request('GET', '/direct_debits/'.$id);
+	}
+
+	/**
      * Created a new tokenized credit card
      * @param string $card_holder the card holders name
      * @param string $card_number the card number

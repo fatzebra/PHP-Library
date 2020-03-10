@@ -8,7 +8,6 @@
 <body>
 <div class="container">
     <h1>Fat Zebra Example Application (PHP) </h1>
-    <h2>Direct Debit</h2>
 
 	<?php if (isset($_SESSION['response'])):
 		$r = $_SESSION['response'];
@@ -44,7 +43,8 @@
 			<?php unset($_SESSION['response']); ?>
         </div>
 	<?php endif; ?>
-    <form class="well" action="process_direct_debit.php" method="post">
+    <h2>Create Direct Debit</h2>
+    <form class="well" action="process_create_direct_debit.php" method="post">
         <label for="bsb">bsb</label>
         <input type="text" name="bsb" id="bsb" value="123-123"/>
 
@@ -60,6 +60,16 @@
         <label for="reference">Description</label>
         <input type="text" name="description" id="description"/>
 
+        <div class="clear"></div>
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+    </form>
+    <hr>
+    <h2>Get Direct Debit</h2>
+    <form class="well" action="process_get_direct_debit.php" method="post">
+        <label for="id">id</label>
+        <input type="text" name="id" id="id" />
         <div class="clear"></div>
         <button type="submit" class="btn btn-primary">
             Submit
