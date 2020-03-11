@@ -4,7 +4,7 @@
  * vim: ts=4 sw=4 sts=4 noet
  * @package Gateway Tests
  */
-include "../vendor/autoload.php";
+
 /**
  * The gateway URL to test against
  */
