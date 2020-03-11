@@ -3,6 +3,8 @@
 
 use function PHPUnit\Framework\assertEquals;
 
+include "vendor/autoload.php";
+
 class PurchaseRequestTest extends PHPUnit\Framework\TestCase
 {
 	public function test_error_checking_amount()
