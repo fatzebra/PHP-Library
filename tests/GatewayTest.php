@@ -8,7 +8,7 @@ use FatZebra\Gateway;
 
 class GatewayTests extends PHPUnit\Framework\TestCase {
 
-	protected function setUp(): void {
+	protected function setUp() {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
 
