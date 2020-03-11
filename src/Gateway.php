@@ -26,7 +26,7 @@ class Gateway
     /**
      * The version of this library
      */
-    public $version = "1.2.1";
+    public $version = "1.2.2";
 
     /**
      * The URL of the Fat Zebra gateway
