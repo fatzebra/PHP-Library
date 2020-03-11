@@ -28,5 +28,5 @@ try {
 	$_SESSION['response'] = $purchase_response;
 	header('Location: index.php');
 } catch(Exception $ex) {
-	print 'Error n: ' . $ex->getMessage();
+	print 'Error: ' . $ex->getMessage();
 }

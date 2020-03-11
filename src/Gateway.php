@@ -334,7 +334,7 @@ class Gateway {
     }
 
 	/**
-	 * Created a new direct debit
+	 * Create a new direct debit
 	 * @param string $bsb
 	 * @param string $account_name
 	 * @param string $account_number

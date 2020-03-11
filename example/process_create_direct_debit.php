@@ -20,5 +20,5 @@ try {
 	$_SESSION['response'] = $direct_debit_response;
 	header('Location: index.php');
 } catch(Exception $ex) {
-	print 'Error n: ' . $ex->getMessage();
+	print 'Error: ' . $ex->getMessage();
 }
