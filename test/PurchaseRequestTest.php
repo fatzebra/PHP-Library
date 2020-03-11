@@ -3,7 +3,7 @@
 
 use function PHPUnit\Framework\assertEquals;
 
-include "vendor/autoload.php";
+include "../vendor/autoload.php";
 
 class PurchaseRequestTest extends PHPUnit\Framework\TestCase
 {
