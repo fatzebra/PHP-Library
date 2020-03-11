@@ -343,7 +343,7 @@ class Gateway {
 	 * @return \StdObject
 	 * @throws TimeoutException
 	 */
-	public function create_direct_debit(string $bsb, string $account_name, string $account_number, float $amount, string $description) {
+	public function create_direct_debit($bsb, $account_name, $account_number, $amount, $description) {
 		if(is_null($bsb) || (strlen($bsb) === 0)) throw new InvalidArgumentException('BSB is a required field.');
 		if(is_null($account_name) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Name is a required field.');
 		if(is_null($account_number) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Number is a required field.');
