@@ -1,9 +1,10 @@
 <?php
+
 /**
  * vim: ts=4 sw=4 sts=4 noet
  * @package Gateway Tests
  */
-include "FatZebra.class.php";
+include "vendor/autoload.php";
 /**
  * The gateway URL to test against
  */
@@ -13,11 +14,13 @@ $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 /**
  * The gateway tests
  */
-class GatewayTest extends PHPUnit\Framework\TestCase {
+class GatewayTest extends PHPUnit\Framework\TestCase
+{
 	/**
 	 * Test a valid purchase
 	 */
-	public function test_valid_transaction() {
+	public function test_valid_transaction()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
@@ -29,15 +32,16 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a valid wallet purchase
 	 */
-	public function test_valid_transaction_with_extra_wallet() {
+	public function test_valid_transaction_with_extra_wallet()
+	{
 		$wallet = array(
 			"type" => "APPLE",
 			"token" => array(
 				"paymentData" => array(
-					 "data" => "value",
-					 "signature" => "value",
-					 "header" => "value",
-					 "version" => "value",
+					"data" => "value",
+					"signature" => "value",
+					"header" => "value",
+					"version" => "value",
 				)
 			)
 		);
@@ -56,15 +60,16 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a valid wallet purchase
 	 */
-	public function test_valid_wallet_transaction() {
+	public function test_valid_wallet_transaction()
+	{
 		$wallet = array(
 			"type" => "APPLE",
 			"token" => array(
 				"paymentData" => array(
-					 "data" => "value",
-					 "signature" => "value",
-					 "header" => "value",
-					 "version" => "value",
+					"data" => "value",
+					"signature" => "value",
+					"header" => "value",
+					"version" => "value",
 				)
 			)
 		);
@@ -82,14 +87,15 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test an invalid wallet purchase
 	 */
-	public function test_invalid_wallet_transaction() {
+	public function test_invalid_wallet_transaction()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 		$wallet = array(
 			"type" => "APPLE",
 			"token" => array(
 				"paymentData" => array(
-					 "data" => "INVALID"
+					"data" => "INVALID"
 				)
 			)
 		);
@@ -102,7 +108,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a declining purchase
 	 */
-	public function test_failing_transaction() {
+	public function test_failing_transaction()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -116,7 +123,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test an auth.
 	 */
-	public function test_valid_auth() {
+	public function test_valid_auth()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -131,7 +139,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test aa void.
 	 */
-	public function test_void() {
+	public function test_void()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -144,7 +153,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a purchase with an invalid card number
 	 */
-	public function test_failing_transaction_invalid_card() {
+	public function test_failing_transaction_invalid_card()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -158,7 +168,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test fetching a purchase
 	 */
-	public function test_fetch_valid_transaction() {
+	public function test_fetch_valid_transaction()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -173,7 +184,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test fetching an invalid purchase
 	 */
-	public function test_fetch_invalid_transaction() {
+	public function test_fetch_invalid_transaction()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -185,7 +197,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a refund
 	 */
-	public function test_refund() {
+	public function test_refund()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -200,7 +213,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test refunding with an invalid transaction ID
 	 */
-	public function test_invalid_refund() {
+	public function test_invalid_refund()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -213,7 +227,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test fetching a refund
 	 */
-	public function test_fetch_refund() {
+	public function test_fetch_refund()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -229,7 +244,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test tokenizing a credit card
 	 */
-	public function test_tokenization() {
+	public function test_tokenization()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -243,7 +259,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test tokenizing an invalid card
 	 */
-	public function test_failing_tokenization() {
+	public function test_failing_tokenization()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -256,7 +273,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Testing a token purchase
 	 */
-	public function test_purchase_with_token() {
+	public function test_purchase_with_token()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -272,7 +290,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a token purchase without a CVV
 	 */
-	public function test_purchase_with_token_no_cvv() {
+	public function test_purchase_with_token_no_cvv()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -288,7 +307,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test a token purchase with an invalid token
 	 */
-	public function test_purchase_with_invalid_token() {
+	public function test_purchase_with_invalid_token()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -301,10 +321,8 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * Test creating a customer
 	 */
-	public function test_create_customer() {
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+	public function test_create_customer()
+	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
@@ -314,5 +332,3 @@ class GatewayTest extends PHPUnit\Framework\TestCase {
 		$this->assertNotNull($result->response->id);
 	}
 }
-
-?>
