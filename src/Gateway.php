@@ -528,14 +528,14 @@ class Gateway
      */
     private function get_customer_ip()
     {
-        $customer_ip = $_SERVER['REMOTE_ADDR'];
+
+        $customer_ip = "UNKNOWN";
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $customer_ip = $_SERVER['REMOTE_ADDR'];
+        }
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $forwarded_ips = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $customer_ip = $forwarded_ips[0];
-        }
-
-        if ($customer_ip == null) {
-            $customer_ip = 'UNKNOWN';
         }
         return $customer_ip;
     }
