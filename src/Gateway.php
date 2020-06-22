@@ -359,7 +359,7 @@ class Gateway {
 			'amount'=> $amount,
 			'bsb'=> $bsb,
 			'account_name'=> $account_name,
-			'account_number'=>$account_number,
+			'account_number'=>$account_number
 		];
 
 		if (is_array($extra)) {
