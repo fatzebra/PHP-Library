@@ -168,6 +168,22 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 		$this->assertEquals($result->response->description, "test deposit");
 	}
 
+
+	/**
+	 * Test create a direct debit with optional parameters
+	 */
+	public function test_direct_debit_optional_parameters()
+	{
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$result = $gw->create_direct_debit("123-123", "Billy Blanks", "012345678", "7", "test deposit", ["reference" => "XXXX-XXXX-XXXX-XXXX"]);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->reference, "XXXX-XXXX-XXXX-XXXX");
+	}
+
+
 	/**
 	 * Test create a direct debit
 	 */

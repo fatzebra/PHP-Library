@@ -114,7 +114,7 @@ class Gateway {
 
         $int_amount = self::floatToInt($amount);
 
-        $payload = [ 
+        $payload = [
             'card_holder' => $card_holder,
             'card_number' => $card_number,
             'card_expiry' => $expiry,
@@ -340,15 +340,17 @@ class Gateway {
 	 * @param string $account_number
 	 * @param float $amount
 	 * @param string $description
+	 * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
 	 * @return \StdObject
 	 * @throws TimeoutException
 	 */
-	public function create_direct_debit($bsb, $account_name, $account_number, $amount, $description) {
+	public function create_direct_debit($bsb, $account_name, $account_number, $amount, $description, $extra = null) {
 		if(is_null($bsb) || (strlen($bsb) === 0)) throw new InvalidArgumentException('BSB is a required field.');
 		if(is_null($account_name) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Name is a required field.');
 		if(is_null($account_number) || (strlen($account_name) === 0)) throw new InvalidArgumentException('Account Number is a required field.');
 		if(is_null($amount) || ($amount === 0)) throw new InvalidArgumentException('Amount is a required field.');
 		if(is_null($description) || (strlen($description) === 0)) throw new InvalidArgumentException('Description is a required field.');
+
 		$customer_ip = $this->get_customer_ip();
 
 		$payload = [
@@ -357,8 +359,13 @@ class Gateway {
 			'amount'=> $amount,
 			'bsb'=> $bsb,
 			'account_name'=> $account_name,
-			'account_number'=>$account_number
+			'account_number'=>$account_number,
 		];
+
+		if (is_array($extra)) {
+			$payload = array_merge_recursive($payload, $extra);
+		}
+
 		return $this->do_request('POST', '/direct_debits', $payload);
 	}
 
