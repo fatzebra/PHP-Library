@@ -168,6 +168,23 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 		$this->assertEquals($result->response->description, "test deposit");
 	}
 
+
+	/**
+	 * Test create a direct debit with optional parameters
+	 */
+	public function test_direct_debit_optional_parameters()
+	{
+		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw->set_timeout(30);
+
+		$reference =  uniqid();
+		$result = $gw->create_direct_debit("083-832", "Billy Blanks", "181843123", "7", "test deposit", ["reference" => $reference]);
+
+		$this->assertTrue($result->successful);
+		$this->assertEquals($result->response->reference, $reference);
+	}
+
+
 	/**
 	 * Test create a direct debit
 	 */
@@ -251,10 +268,10 @@ class GatewayTests extends PHPUnit\Framework\TestCase {
 	 * Testing fail fetching a previously tokenized card using invalid token
 	 */
 	public function test_failed_get_tokenized_card() {
-		$gw = new FatZebra\Gateway("TEST", "TEST", true);
+		$gw = new FatZebra\Gateway("TEST","TEST",true);
 		$gw->set_timeout(30);
 
-		$result = $gw->get_tokenized_card("invalid token");
+		$result = $gw->get_tokenized_card("invalid-token");
 
 		$this->assertFalse($result->successful);
 		$this->assertEquals($result->errors[0], "Record not found");
