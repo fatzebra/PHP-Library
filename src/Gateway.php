@@ -423,9 +423,14 @@ class Gateway
      * @param string $card_number the credit card number
      * @param string $card_expiry the card expiry date (mm/yyyy)
      * @param string $cvv the CVV for the credit card
+     * @param string $address the customers street number and name
+     * @param string $city the customers city
+     * @param string $state the customers state
+     * @param string $postcode the customers postcode
+     * @param string $country the customers country
      * @return \StdObject
      */
-    public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv)
+    public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv, $address = "", $city = "", $state = "", $postcode = "", $country = "")
     {
         if (is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException("First name is a required field.");
         if (is_null($last_name) || (strlen($last_name) === 0)) throw new \InvalidArgumentException("Last name is a required field.");
@@ -447,6 +452,13 @@ class Gateway
                 "card_number" => $card_number,
                 "expiry_date" => $card_expiry,
                 "cvv" => $cvv
+            ),
+            "address" => array(
+                "address" => $address,  
+                "city" => $city,  
+                "state" => $state,  
+                "postcode" => $postcode,  
+                "country" => $country,
             )
         );
 
