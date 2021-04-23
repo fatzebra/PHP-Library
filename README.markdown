@@ -1,7 +1,7 @@
 PHP API Library for Fat Zebra
 ==============================
 
-Release 1.2.2 for API version 1.0
+Release 1.2.3 for API version 1.0
 
 A PHP library for the [Fat Zebra](https://www.fatzebra.com.au) Online Payment Gateway (for Australian Merchants)
 Now supports recurring billing (subscriptions, plans, customers)
