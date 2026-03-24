@@ -364,6 +364,36 @@ class Gateway
     }
 
     /**
+     * Performs a standalone refund against the FatZebra gateway without an original transaction
+     * @param float $amount the amount to be refunded
+     * @param string $reference the refund reference
+     * @param string $card_token the card token to refund to
+     * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
+     * @return \StdObject
+     */
+    public function refund_standalone($amount, $reference, $card_token, $extra = null)
+    {
+        if (is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
+        if (intval($amount) < 1) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
+        if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
+        if (is_null($card_token) || strlen($card_token) === 0) throw new \InvalidArgumentException("Card token is required");
+
+        $int_amount = self::floatToInt($amount);
+
+        $payload = array(
+            "amount" => $int_amount,
+            "reference" => $reference,
+            "card_token" => $card_token
+        );
+
+        if (is_array($extra)) {
+            $payload = array_merge_recursive($payload, $extra);
+        }
+
+        return $this->do_request("POST", "/refunds", $payload);
+    }
+
+    /**
      * Retrieves a purchase from the FatZebra gateway
      * @param string $reference the purchase ID
      * @return \StdObject

@@ -331,4 +331,47 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$this->assertTrue($result->successful);
 		$this->assertNotNull($result->response->id);
 	}
+
+	/**
+	 * Test a standalone refund with a valid card token (mocked)
+	 */
+	public function test_refund_standalone()
+	{
+		$stubbed_response = '{"successful":true,"response":{"id":"refund123","successful":true,"message":"Refund processed"},"errors":[],"test":true}';
+		$stub = $this->createMock(FatZebra\Gateway::class);
+		$stub->method('refund_standalone')->willReturn(json_decode($stubbed_response));
+		$result = $stub->refund_standalone(50.00, "UNITTEST" . rand(), "TOK123");
+
+		$this->assertTrue($result->successful);
+		$this->assertTrue($result->response->successful);
+		$this->assertEquals($result->response->message, "Refund processed");
+	}
+
+	/**
+	 * Test standalone refund with an invalid card token
+	 */
+	public function test_refund_standalone_invalid_token()
+	{
+		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+		$gw->timeout = 30;
+
+		$result = $gw->refund_standalone(50.00, "UNITTEST" . rand(), "INVALID_TOKEN");
+
+		$this->assertFalse($result->successful);
+	}
+
+	/**
+	 * Test standalone refund with extra parameters (mocked)
+	 */
+	public function test_refund_standalone_with_extra()
+	{
+		$stubbed_response = '{"successful":true,"response":{"id":"refund456","successful":true,"message":"Refund processed"},"errors":[],"test":true}';
+		$stub = $this->createMock(FatZebra\Gateway::class);
+		$stub->method('refund_standalone')->willReturn(json_decode($stubbed_response));
+		$extra = array("metadata" => "test_metadata");
+		$result = $stub->refund_standalone(50.00, "UNITTEST" . rand(), "TOK123", $extra);
+
+		$this->assertTrue($result->successful);
+		$this->assertTrue($result->response->successful);
+	}
 }
