@@ -345,7 +345,7 @@ class Gateway
     {
         if (is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
         if (is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
-        if (intval($amount) < 1) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
+        if (floatval($amount) < 0.01) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
         if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 
         $int_amount = self::floatToInt($amount);
