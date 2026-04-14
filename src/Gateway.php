@@ -279,9 +279,9 @@ class Gateway
         $payload = array(
             'customer_ip' => $customer_ip,
             'card_token' => $card_token,
-            'reference' => $this->reference,
+            'reference' => $reference,
             'amount' => $int_amount,
-            'currency' => $this->currency,
+            'currency' => $currency,
             'capture' => false
         );
 
