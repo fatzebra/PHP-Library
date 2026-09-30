@@ -374,7 +374,7 @@ class Gateway
     public function refund_standalone($amount, $reference, $card_token, $extra = null)
     {
         if (is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
-        if (intval($amount) < 1) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
+        if (floatval($amount) < 0.01) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
         if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
         if (is_null($card_token) || strlen($card_token) === 0) throw new \InvalidArgumentException("Card token is required");
 
