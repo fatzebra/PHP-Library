@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The oldest release merchants still run, and the oldest and newest PHP with the
-        # CVE-2026-109618/109619 fixes.
+        # The last 7.x release, for merchants not yet upgraded, and the oldest and newest PHP
+        # with the CVE-2026-109618/109619 fixes.
         php: ["7.4.33", "8.2.35", "8.5.12"]
     env:
       PHP_VERSION: ${{ matrix.php }}
