@@ -9,6 +9,7 @@ include "vendor/autoload.php";
  * The gateway URL to test against
  */
 define("GW_URL", "https://gateway.pmnts-sandbox.io");
+define("CARD_EXPIRY", "05/" . ((int) date("Y") + 2));
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
 /**
@@ -23,7 +24,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
-		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 		$this->assertTrue($result->successful);
 		$this->assertTrue($result->response->successful);
 		$this->assertEquals($result->response->message, "Approved");
@@ -113,7 +114,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->purchase(100.05, "UNITTEST" . rand(), "Jim Smith", "5555555555554444", "05/2023", 123);
+		$result = $gw->purchase(100.05, "UNITTEST" . rand(), "Jim Smith", "5555555555554444", CARD_EXPIRY, 123);
 
 		$this->assertTrue($result->successful);
 		$this->assertFalse($result->response->successful);
@@ -128,7 +129,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->authorization(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->authorization(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 
 		$this->assertTrue($result->successful);
 		$this->assertTrue($result->response->successful);
@@ -144,7 +145,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->authorization(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->authorization(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 		$voidResult = $gw->void($result->response->id);
 		$this->assertTrue($voidResult->successful);
 		$this->assertEquals($voidResult->response->message, "Voided");
@@ -158,7 +159,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012345", "05/2023", 123);
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012345", CARD_EXPIRY, 123);
 
 		$this->assertFalse($result->successful);
 		$this->assertFalse($result->response->successful);
@@ -173,7 +174,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 
 		$purch = $gw->get_purchase($result->response->id);
 		$this->assertTrue($purch->successful);
@@ -189,7 +190,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$purch = $gw->get_purchase("12345");
+		$purch = $gw->get_purchase("UNITTEST-NOTFOUND-" . rand());
 		$this->assertFalse($purch->successful);
 		$this->assertEquals($purch->errors[0], "Could not find Purchase");
 	}
@@ -202,7 +203,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 
 		$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
 
@@ -232,7 +233,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", CARD_EXPIRY, 123);
 
 		$refund_result = $gw->refund($result->response->id, 50.00, "UNITTEST" . rand());
 		$fetch_result = $gw->get_refund($refund_result->response->id);
@@ -249,7 +250,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", "123");
+		$result = $gw->tokenize("Billy Blanks", "5123456789012346", CARD_EXPIRY, "123");
 
 		$this->assertTrue($result->successful);
 		$this->assertEquals($result->response->card_holder, "Billy Blanks");
@@ -264,7 +265,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->tokenize("Billy Blanks", "5123456789012345", "05/2023", "123");
+		$result = $gw->tokenize("Billy Blanks", "5123456789012345", CARD_EXPIRY, "123");
 
 		$this->assertFalse($result->successful);
 		$this->assertEquals($result->errors[0], "Card number is invalid");
@@ -278,7 +279,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", "123");
+		$card = $gw->tokenize("Billy Blanks", "5123456789012346", CARD_EXPIRY, "123");
 
 		$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand(), 123);
 
@@ -295,7 +296,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$card = $gw->tokenize("Billy Blanks", "5123456789012346", "05/2023", 123);
+		$card = $gw->tokenize("Billy Blanks", "5123456789012346", CARD_EXPIRY, 123);
 
 		$result = $gw->token_purchase($card->response->token, 100.00, "UNITTEST" . rand());
 
@@ -326,7 +327,7 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
 
-		$result = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", "UNITTEST" . rand(), "Mark Smith", "5123456789012346", "05/2023", 123);
+		$result = $gw->create_customer("Mark", "Smith", "mark" . rand() . "@smith.com", "UNITTEST" . rand(), "Mark Smith", "5123456789012346", CARD_EXPIRY, 123);
 
 		$this->assertTrue($result->successful);
 		$this->assertNotNull($result->response->id);

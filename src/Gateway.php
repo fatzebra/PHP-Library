@@ -534,7 +534,8 @@ class Gateway
             if (curl_errno($curl) == 28) throw new TimeoutException("cURL Timeout: " . curl_error($curl));
             throw new \Exception("cURL error " . curl_errno($curl) . ": " . curl_error($curl));
         }
-        curl_close($curl);
+        // A no-op since PHP 8.0, and deprecated in 8.5.
+        if (PHP_VERSION_ID < 80000) curl_close($curl);
 
         $response =  json_decode($data);
         if (is_null($response)) {
