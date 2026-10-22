@@ -360,6 +360,23 @@ class GatewayTest extends PHPUnit\Framework\TestCase
 		$this->assertFalse($result->successful);
 	}
 
+	public function test_refund_standalone_under_a_dollar_reaches_the_gateway()
+	{
+		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+		$gw->timeout = 30;
+
+		$result = $gw->refund_standalone(0.50, "UNITTEST" . rand(), "INVALID_TOKEN");
+
+		$this->assertFalse($result->successful);
+	}
+
+	public function test_refund_standalone_under_a_cent_is_invalid()
+	{
+		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
+		$this->expectException(InvalidArgumentException::class);
+		$gw->refund_standalone(0.001, "UNITTEST" . rand(), "INVALID_TOKEN");
+	}
+
 	/**
 	 * Test standalone refund with extra parameters (mocked)
 	 */
