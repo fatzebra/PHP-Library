@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The oldest release merchants still run, and the oldest and newest PHP with the
+        # CVE-2026-109618/109619 fixes.
+        php: ["7.4.33", "8.2.35", "8.5.12"]
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Resolve dependencies for the PHP under test, so PHPUnit's own dependencies install on it.
+      - name: Install dependencies
+        run: |
+          docker run --rm -v "$PWD":/app -w /app -e PHP_VERSION composer:2 \
+            sh -c 'composer config platform.php "$PHP_VERSION" && composer update --no-interaction --no-progress'
+
+      # The tests call the sandbox gateway as the public TEST merchant.
+      - name: Test
+        run: docker run --rm -v "$PWD":/app -w /app "php:${PHP_VERSION}-cli" php vendor/bin/phpunit test/
