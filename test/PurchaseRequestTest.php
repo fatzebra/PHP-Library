@@ -13,15 +13,15 @@ class PurchaseRequestTest extends PHPUnit\Framework\TestCase
 		$gw->timeout = 30;
 		$cc_expiry_year  = (string) ((int) date("Y") + 2);
 		$response = $gw->purchase(-100.00, "UNITTEST", "Jim Smith", "5123456789012346", "05/" . $cc_expiry_year, 123);
-		assertEquals("Amount must be greater than or equal to 0", $response->errors[0]);
+		assertEquals("Amount must be greater than 0 when performing a purchase", $response->errors[0]);
 	}
 
 	public function test_invalid_expiry()
 	{
 		$gw = new FatZebra\Gateway("TEST", "TEST", true, GW_URL);
 		$gw->timeout = 30;
-		$response = $gw->purchase(-100.00, "UNITTEST", "Jim Smith", "5123456789012346", "05/2013", 123);
-		assertEquals("Expiry date is invalid (expired)", $response->errors[0]);
+		$response = $gw->purchase(100.00, "UNITTEST" . rand(), "Jim Smith", "5123456789012346", "05/2013", 123);
+		assertEquals("Expiry date is invalid - expiry dates must be in the future", $response->errors[0]);
 	}
 
 	public function test_error_checking_amount_missing()
